@@ -4,7 +4,7 @@
   <title><![CDATA[/无间落叶]]></title>
   <link href="http://blog.leafsoar.com/atom.xml" rel="self"/>
   <link href="http://blog.leafsoar.com/"/>
-  <updated>2013-10-28T22:44:33+08:00</updated>
+  <updated>2013-11-07T00:26:16+08:00</updated>
   <id>http://blog.leafsoar.com/</id>
   <author>
     <name><![CDATA[一叶]]></name>
@@ -346,7 +346,7 @@
 <ul>
 <li>使用 CCMenu 来作为点击项的操作：一般而言，一叶不喜欢使用 CCMenu，因为它的触摸时机不好控制，特别是在当前界面可拖动的情况，还有些冲突，解决起来也挺麻烦，一个显著的影响是，点击 CCMenu 的时候，拖动滚屏就失去了效果，如果你有精力着折腾使用 CCMenu ,那么无妨～</li>
 <li>使用常用精灵，以容器层接受触摸消息，然后依次遍历精灵，条件判断是否产生点击项，这是一个常用的方法，需要设定好一系列集合，遍历，判断等复杂的步骤，特别是类似方块游戏中用的挺多，总乐此不疲～话说一叶之前也是这么实现的！但是实现起来也时相当麻烦的～而且编写的逻辑不能够被重用（其它游戏类似功能）</li>
-<li>建立一套新的机制，来满足特性情况下的需求，也就是封装一套解决方案，以方便对诸如此类的操作，这让一叶想到了之前的文章 《<a href="http://blog.leafsoar.com/archives/2013/05-25-10.html">多层 UI 触摸事件的轻量级设计</a>》（这种设计能够适应大多情况，正好用在此处，看看它的实用性如何！），在写这篇文章的时候，也将此处的操作用这样的机制重构一番。</li>
+<li>建立一套新的机制，来满足特性情况下的需求，也就是封装一套解决方案，以方便对诸如此类的操作，这让一叶想到了之前的文章 《<a href="http://blog.leafsoar.com/archives/2013/05-25.html">多层 UI 触摸事件的轻量级设计</a>》（这种设计能够适应大多情况，正好用在此处，看看它的实用性如何！），在写这篇文章的时候，也将此处的操作用这样的机制重构一番。</li>
 </ul>
 
 
@@ -354,7 +354,7 @@
 
 <h3><strong>基于 LsTouch 的触摸机制实现</strong></h3>
 
-<p>在阅读以下内容之前，可以先看《<a href="http://blog.leafsoar.com/archives/2013/05-25-10.html">多层 UI 触摸事件的轻量级设计</a>》一文，里面详细介绍了它的实现机制，以及特性，可以简称它为 <strong>LsTouch</strong>，而此文是将这种设计用在可用之处。当然作为封装来说，你并不需要了解它的内部实现，就能够很好的使用它。或者换句话说，作为封装的模块，你只需要知道，如下这样使用它就行，它能帮我们解决触摸操作的问题，如果对内部实现感兴趣，可以去看一看实现。它的步骤如下。</p>
+<p>在阅读以下内容之前，可以先看《<a href="http://blog.leafsoar.com/archives/2013/05-25.html">多层 UI 触摸事件的轻量级设计</a>》一文，里面详细介绍了它的实现机制，以及特性，可以简称它为 <strong>LsTouch</strong>，而此文是将这种设计用在可用之处。当然作为封装来说，你并不需要了解它的内部实现，就能够很好的使用它。或者换句话说，作为封装的模块，你只需要知道，如下这样使用它就行，它能帮我们解决触摸操作的问题，如果对内部实现感兴趣，可以去看一看实现。它的步骤如下。</p>
 
 <p> 继承 <strong>LsTouchEvent</strong> 并实现 <strong>touchEventAction</strong> 接口函数，这样做以后将意味着，你可以在这个类中使用 <strong>addLsTouch</strong> 方法添加 “可触摸” 元素，其自动管理，之后可以在任意地方调用 <strong>sendTouchMessage</strong> 方法（它将会传入当前的点击 pTouch 参数），后自动回调 touchEventAction 方法，回调参数将包含了，当前的 “可触摸” 元素的引用，你因此知道，你点击的是哪个元素（如 哪个关卡）。以下用代码来说明其实现（我们将旧代码注释，以体现所改动的地方）：</p>
 
@@ -536,7 +536,7 @@
 
 <p></p>
 
-<p>这里的 LsTouch 根据实际情况 比 原来（原来是指《<a href="http://blog.leafsoar.com/archives/2013/05-25-10.html">多层 UI 触摸事件的轻量级设计</a>》）做了些改进。</p>
+<p>这里的 LsTouch 根据实际情况 比 原来（原来是指《<a href="http://blog.leafsoar.com/archives/2013/05-25.html">多层 UI 触摸事件的轻量级设计</a>》）做了些改进。</p>
 
 <ul>
 <li>内部判断去除了一些不必要的判断</li>
@@ -554,7 +554,7 @@
 <p>当前界面的所有功能已经实现完毕，如果使用它们，你需要注意一些地方，比如关卡精灵可以根据自己需要扩展其元素内容等。由于时滚动分页，为了一目了然我们当前的页，所以也添加了代码实现在屏幕上方设定了 <strong>页数指示球</strong>（我给起的名），指示球会在你拖动界面的时候有动态效果，放大当前 页数的指示球，给予更好的用户体验，关于这部分代码我就不贴了，可以直接从源码里面看见，方法名为 <strong>setCurPageBall</strong>，它会根据总页数和当前页数自动处理，你所需要做的只是在合适的时候调用它即可。</p>
 
 <p>注意：为了让问题更有针对性，在本文中所有的位置关系所参考的都是 WinSize，
-这意味着，如果你在不同的屏幕适配方案中可能需要有所改动，对屏幕适配这里有一篇文章可以作为参考《<a href="http://blog.leafsoar.com/archives/2013/05-10-19.html">Cocos2d-x 屏幕适配新解</a>》。</p>
+这意味着，如果你在不同的屏幕适配方案中可能需要有所改动，对屏幕适配这里有一篇文章可以作为参考《<a href="http://blog.leafsoar.com/archives/2013/05-10.html">Cocos2d-x 屏幕适配新解</a>》。</p>
 
 <p><img src="http://blog.leafsoar.com/images/2013/2013-07-27-1.jpg" alt="图片" /></p>
 
@@ -578,7 +578,7 @@
     <link href="http://blog.leafsoar.com/archives/2013/06-04.html"/>
     <updated>2013-06-04T10:50:00+08:00</updated>
     <id>http://blog.leafsoar.com/archives/2013/cocos2dx-mem</id>
-    <content type="html"><![CDATA[<p>如果 <a href="http://blog.leafsoar.com/archives/2013/05-22-23.html">Cocos2d-x 内存管理浅说</a> 做为初步认识，而 <a href="http://blog.leafsoar.com/archives/2013/05-29-10.html">Cocos2d-x 内存管理的一种实现</a>做为进阶使用，那么本文将详细的分析一下 Cocos2d-x 的内存管理的设计实现和原理。<strong>知其然，知其所以然 ~</strong>或者说：嗯，它这么做，一定是有原因的，体会设计者的用意，感同身受，如果是你，将会如何设计！~~</p>
+    <content type="html"><![CDATA[<p>如果 <a href="http://blog.leafsoar.com/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a> 做为初步认识，而 <a href="http://blog.leafsoar.com/archives/2013/05-29.html">Cocos2d-x 内存管理的一种实现</a>做为进阶使用，那么本文将详细的分析一下 Cocos2d-x 的内存管理的设计实现和原理。<strong>知其然，知其所以然 ~</strong>或者说：嗯，它这么做，一定是有原因的，体会设计者的用意，感同身受，如果是你，将会如何设计！~~</p>
 
 <p>我觉得 <strong>最好的学习方式是以自己的语言组织，说与别人听 ～</strong> 这样对自己：更容易发现平时容易忽略的问题，对别人：或多或少也有所助益！以学习为目的，而别人的受益算是附带的效果，这样一个出发点 ~</p>
 
@@ -734,7 +734,7 @@
 
 <p></p>
 
-<p>上面便是通过 <code>create()</code> 方法创建对象的过程。文中说到，一个合适的时机，解除自身引用（也就是释放池引用），那这又是在何时进行的呢？程序的运行有一个主循环，控制着每一帧的操作，在每一帧画面画完之时会自动调用 <code>CCPoolManager::sharedPoolManager()-&gt;pop();</code> 方法 ( 具体可参见文章<a href="http://blog.leafsoar.com/archives/2013/05-05-23.html">Cocos2d-x 程序是如何开始运行与结束的</a> ，这里我们只要知道每一帧结束都会调用 pop() 方法)，来自动清理 <strong>创建时期</strong> 的引用。现在我们就来看看 <code>pop()</code> 的方法实现：</p>
+<p>上面便是通过 <code>create()</code> 方法创建对象的过程。文中说到，一个合适的时机，解除自身引用（也就是释放池引用），那这又是在何时进行的呢？程序的运行有一个主循环，控制着每一帧的操作，在每一帧画面画完之时会自动调用 <code>CCPoolManager::sharedPoolManager()-&gt;pop();</code> 方法 ( 具体可参见文章<a href="http://blog.leafsoar.com/archives/2013/05-05.html">Cocos2d-x 程序是如何开始运行与结束的</a> ，这里我们只要知道每一帧结束都会调用 pop() 方法)，来自动清理 <strong>创建时期</strong> 的引用。现在我们就来看看 <code>pop()</code> 的方法实现：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1112,7 +1112,7 @@
 
 <p></p>
 
-<p><strong>所以我们便能够看到 push 方法被调用了两次</strong>，但其实如果我们把这里的手动调用放在方法的开始处，或者干脆就不使用 <code>CCPoolManager::sharedPoolManager()-&gt;push();</code> ，对程序也没任何影响，这样从头到尾，<strong>只创建了一个自动释放池，而这里多创建的一个并没有多大的用处。</strong> 或者用处不甚明显，因为多创建一个释放池是有其效果的，效果具体体现在哪里，那就是 <strong>可以使调用 push() 方法之前的对象，多存活一帧。</strong>，因为 pop 方法只对当前释放池做了 clear 释放。为了方便起见，我们使用 <a href="http://blog.leafsoar.com/archives/2013/05-22-23.html">Cocos2d-x 内存管理浅说</a> 里面的方法观察每一帧的情况，看下面测试代码：</p>
+<p><strong>所以我们便能够看到 push 方法被调用了两次</strong>，但其实如果我们把这里的手动调用放在方法的开始处，或者干脆就不使用 <code>CCPoolManager::sharedPoolManager()-&gt;push();</code> ，对程序也没任何影响，这样从头到尾，<strong>只创建了一个自动释放池，而这里多创建的一个并没有多大的用处。</strong> 或者用处不甚明显，因为多创建一个释放池是有其效果的，效果具体体现在哪里，那就是 <strong>可以使调用 push() 方法之前的对象，多存活一帧。</strong>，因为 pop 方法只对当前释放池做了 clear 释放。为了方便起见，我们使用 <a href="http://blog.leafsoar.com/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a> 里面的方法观察每一帧的情况，看下面测试代码：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1197,7 +1197,7 @@
 
 <p>我们当前运行这一个场景，场景初始化，添加了很多层，层里面有其它的层或者精灵，而这些都是 CCNode 节点，以场景为根，形成一个树形结构，场景初始化之后（一帧之后），这些节点将完全 <strong>依附</strong> (内部通过 retain) 在这个树形结构之上，全权交由树来管理，当我们 <strong>砍去一个树枝</strong>，或者将树 <strong>连根拔起</strong>，那么在它之上的“子节点”也会跟着去除(内部通过 release)，这便是链式反应。</p>
 
-<p><a href="http://blog.leafsoar.com/archives/2013/05-29-10.html">Cocos2d-x 内存管理的一种实现</a>，此文这种实现的本质既是 <strong>强化</strong>这种 <strong>链式反应</strong>，也是解决内存可能出错的一个解决方案。如下（前文片段，具体详见前文）：</p>
+<p><a href="http://blog.leafsoar.com/archives/2013/05-29.html">Cocos2d-x 内存管理的一种实现</a>，此文这种实现的本质既是 <strong>强化</strong>这种 <strong>链式反应</strong>，也是解决内存可能出错的一个解决方案。如下（前文片段，具体详见前文）：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1251,7 +1251,7 @@
 
 <h2>Retain 与 Release 乃万恶之源</h2>
 
-<p>稍微了解一点就能知道 Cocos2d-x 是基于引用计数来管理内存的，应用计数的加减就是 retain 和 release 方法的实现。在大多数情况下我们不用 <strong>显示</strong> 的去调用这两种方法，如在 <strong>CCNode</strong> 的 <strong>addChild</strong> 和 <strong>removeChild</strong> 方法，<strong>CCArray</strong> 的 <strong>addObject</strong> 和 <strong>removeObject</strong> 等这样成双成对的方法，对于这些的使用很简单，一叶上篇文章 <strong><a href="http://blog.leafsoar.com/archives/2013/05-22-23.html">Cocos2d-x 内存管理浅说</a></strong> 从概念上简单的分析了内部对象的生命周期特点，在此 <strong>浅说</strong> 之中，我刻意的绕过了它的底层实现，并没有深究其原理，对引用计数等概念也只是几句话一带而过，重点放在使用者该关心什么，该注意什么。因为我觉得 <strong>引用计数是个坑，一个很大的坑 ~</strong></p>
+<p>稍微了解一点就能知道 Cocos2d-x 是基于引用计数来管理内存的，应用计数的加减就是 retain 和 release 方法的实现。在大多数情况下我们不用 <strong>显示</strong> 的去调用这两种方法，如在 <strong>CCNode</strong> 的 <strong>addChild</strong> 和 <strong>removeChild</strong> 方法，<strong>CCArray</strong> 的 <strong>addObject</strong> 和 <strong>removeObject</strong> 等这样成双成对的方法，对于这些的使用很简单，一叶上篇文章 <strong><a href="http://blog.leafsoar.com/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a></strong> 从概念上简单的分析了内部对象的生命周期特点，在此 <strong>浅说</strong> 之中，我刻意的绕过了它的底层实现，并没有深究其原理，对引用计数等概念也只是几句话一带而过，重点放在使用者该关心什么，该注意什么。因为我觉得 <strong>引用计数是个坑，一个很大的坑 ~</strong></p>
 
 <!-- more -->
 
@@ -3416,7 +3416,7 @@
     <link href="http://blog.leafsoar.com/archives/2013/05-13.html"/>
     <updated>2013-05-13T08:02:00+08:00</updated>
     <id>http://blog.leafsoar.com/archives/2013/cocos2dx-screen-solutions-extension</id>
-    <content type="html"><![CDATA[<p>在读这篇文章之前，先读前一篇文章 <a href="http://blog.leafsoar.com/archives/2013/05-10-19.html">Cocos2d-x 屏幕适配新解</a> 是必要的。</p>
+    <content type="html"><![CDATA[<p>在读这篇文章之前，先读前一篇文章 <a href="http://blog.leafsoar.com/archives/2013/05-10.html">Cocos2d-x 屏幕适配新解</a> 是必要的。</p>
 
 <p>如果说前一篇文章文章在 LsSize 提出之前的是基础，LsSize 是应用，那么对于这篇文章来说，LsSize 是基础，而这里是其的综合应用，我之初衷是其扩展性和兼容性，激发读者思维。也许你并没有体会出 LsSize 的强大，而实际上，<strong>它能做的比你想象的要多的多，这是前话 ~</strong></p>
 
@@ -3664,7 +3664,7 @@
 
 <p></p>
 
-<p>我们可以用 <a href="http://blog.leafsoar.com/archives/2013/05-05-23.html">Cocos2d-x 程序是如何开始运行与结束的</a> 一文的方法，跟踪 WinSize 的初始化，获取过程，在这里简单提一下，如下步骤：</p>
+<p>我们可以用 <a href="http://blog.leafsoar.com/archives/2013/05-05.html">Cocos2d-x 程序是如何开始运行与结束的</a> 一文的方法，跟踪 WinSize 的初始化，获取过程，在这里简单提一下，如下步骤：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -4306,7 +4306,7 @@
 
 <p></p>
 
-<p>在前面的博文 <a href="http://blog.leafsoar.com/archives/2013/05-05-23.html">Cocos2d-x 程序是如何开始运行与结束的</a>，我们分析了 cocos2d-x 程序运行的始末，故推荐在此时调用停止定时器的方法。</p>
+<p>在前面的博文 <a href="http://blog.leafsoar.com/archives/2013/05-05.html">Cocos2d-x 程序是如何开始运行与结束的</a>，我们分析了 cocos2d-x 程序运行的始末，故推荐在此时调用停止定时器的方法。</p>
 
 <p>有了全局定时器我们能做什么？这就要问你为何而实现全局定时器了 : P</p>
 ]]></content>

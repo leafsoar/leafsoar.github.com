@@ -122,7 +122,7 @@
 
 <h2>Retain 与 Release 乃万恶之源</h2>
 
-<p>稍微了解一点就能知道 Cocos2d-x 是基于引用计数来管理内存的，应用计数的加减就是 retain 和 release 方法的实现。在大多数情况下我们不用 <strong>显示</strong> 的去调用这两种方法，如在 <strong>CCNode</strong> 的 <strong>addChild</strong> 和 <strong>removeChild</strong> 方法，<strong>CCArray</strong> 的 <strong>addObject</strong> 和 <strong>removeObject</strong> 等这样成双成对的方法，对于这些的使用很简单，一叶上篇文章 <strong><a href="http://blog.leafsoar.com/archives/2013/05-22-23.html">Cocos2d-x 内存管理浅说</a></strong> 从概念上简单的分析了内部对象的生命周期特点，在此 <strong>浅说</strong> 之中，我刻意的绕过了它的底层实现，并没有深究其原理，对引用计数等概念也只是几句话一带而过，重点放在使用者该关心什么，该注意什么。因为我觉得 <strong>引用计数是个坑，一个很大的坑 ~</strong></p>
+<p>稍微了解一点就能知道 Cocos2d-x 是基于引用计数来管理内存的，应用计数的加减就是 retain 和 release 方法的实现。在大多数情况下我们不用 <strong>显示</strong> 的去调用这两种方法，如在 <strong>CCNode</strong> 的 <strong>addChild</strong> 和 <strong>removeChild</strong> 方法，<strong>CCArray</strong> 的 <strong>addObject</strong> 和 <strong>removeObject</strong> 等这样成双成对的方法，对于这些的使用很简单，一叶上篇文章 <strong><a href="http://blog.leafsoar.com/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a></strong> 从概念上简单的分析了内部对象的生命周期特点，在此 <strong>浅说</strong> 之中，我刻意的绕过了它的底层实现，并没有深究其原理，对引用计数等概念也只是几句话一带而过，重点放在使用者该关心什么，该注意什么。因为我觉得 <strong>引用计数是个坑，一个很大的坑 ~</strong></p>
 
 <!-- more -->
 

@@ -116,7 +116,7 @@
 	<a href='http://blog.leafsoar.com/archives/2013/06-04.html' rel='bookmark'
            title='深入理解 Cocos2d-x 内存管理'>http://blog.leafsoar.com/archives/2013/06-04.html</a>    
   </p>  
-  <p>如果 <a href="http://blog.leafsoar.com/archives/2013/05-22-23.html">Cocos2d-x 内存管理浅说</a> 做为初步认识，而 <a href="http://blog.leafsoar.com/archives/2013/05-29-10.html">Cocos2d-x 内存管理的一种实现</a>做为进阶使用，那么本文将详细的分析一下 Cocos2d-x 的内存管理的设计实现和原理。<strong>知其然，知其所以然 ~</strong>或者说：嗯，它这么做，一定是有原因的，体会设计者的用意，感同身受，如果是你，将会如何设计！~~</p>
+  <p>如果 <a href="http://blog.leafsoar.com/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a> 做为初步认识，而 <a href="http://blog.leafsoar.com/archives/2013/05-29.html">Cocos2d-x 内存管理的一种实现</a>做为进阶使用，那么本文将详细的分析一下 Cocos2d-x 的内存管理的设计实现和原理。<strong>知其然，知其所以然 ~</strong>或者说：嗯，它这么做，一定是有原因的，体会设计者的用意，感同身受，如果是你，将会如何设计！~~</p>
 
 <p>我觉得 <strong>最好的学习方式是以自己的语言组织，说与别人听 ～</strong> 这样对自己：更容易发现平时容易忽略的问题，对别人：或多或少也有所助益！以学习为目的，而别人的受益算是附带的效果，这样一个出发点 ~</p>
 
@@ -272,7 +272,7 @@
 
 <p></p>
 
-<p>上面便是通过 <code>create()</code> 方法创建对象的过程。文中说到，一个合适的时机，解除自身引用（也就是释放池引用），那这又是在何时进行的呢？程序的运行有一个主循环，控制着每一帧的操作，在每一帧画面画完之时会自动调用 <code>CCPoolManager::sharedPoolManager()-&gt;pop();</code> 方法 ( 具体可参见文章<a href="http://blog.leafsoar.com/archives/2013/05-05-23.html">Cocos2d-x 程序是如何开始运行与结束的</a> ，这里我们只要知道每一帧结束都会调用 pop() 方法)，来自动清理 <strong>创建时期</strong> 的引用。现在我们就来看看 <code>pop()</code> 的方法实现：</p>
+<p>上面便是通过 <code>create()</code> 方法创建对象的过程。文中说到，一个合适的时机，解除自身引用（也就是释放池引用），那这又是在何时进行的呢？程序的运行有一个主循环，控制着每一帧的操作，在每一帧画面画完之时会自动调用 <code>CCPoolManager::sharedPoolManager()-&gt;pop();</code> 方法 ( 具体可参见文章<a href="http://blog.leafsoar.com/archives/2013/05-05.html">Cocos2d-x 程序是如何开始运行与结束的</a> ，这里我们只要知道每一帧结束都会调用 pop() 方法)，来自动清理 <strong>创建时期</strong> 的引用。现在我们就来看看 <code>pop()</code> 的方法实现：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -650,7 +650,7 @@
 
 <p></p>
 
-<p><strong>所以我们便能够看到 push 方法被调用了两次</strong>，但其实如果我们把这里的手动调用放在方法的开始处，或者干脆就不使用 <code>CCPoolManager::sharedPoolManager()-&gt;push();</code> ，对程序也没任何影响，这样从头到尾，<strong>只创建了一个自动释放池，而这里多创建的一个并没有多大的用处。</strong> 或者用处不甚明显，因为多创建一个释放池是有其效果的，效果具体体现在哪里，那就是 <strong>可以使调用 push() 方法之前的对象，多存活一帧。</strong>，因为 pop 方法只对当前释放池做了 clear 释放。为了方便起见，我们使用 <a href="http://blog.leafsoar.com/archives/2013/05-22-23.html">Cocos2d-x 内存管理浅说</a> 里面的方法观察每一帧的情况，看下面测试代码：</p>
+<p><strong>所以我们便能够看到 push 方法被调用了两次</strong>，但其实如果我们把这里的手动调用放在方法的开始处，或者干脆就不使用 <code>CCPoolManager::sharedPoolManager()-&gt;push();</code> ，对程序也没任何影响，这样从头到尾，<strong>只创建了一个自动释放池，而这里多创建的一个并没有多大的用处。</strong> 或者用处不甚明显，因为多创建一个释放池是有其效果的，效果具体体现在哪里，那就是 <strong>可以使调用 push() 方法之前的对象，多存活一帧。</strong>，因为 pop 方法只对当前释放池做了 clear 释放。为了方便起见，我们使用 <a href="http://blog.leafsoar.com/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a> 里面的方法观察每一帧的情况，看下面测试代码：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -735,7 +735,7 @@
 
 <p>我们当前运行这一个场景，场景初始化，添加了很多层，层里面有其它的层或者精灵，而这些都是 CCNode 节点，以场景为根，形成一个树形结构，场景初始化之后（一帧之后），这些节点将完全 <strong>依附</strong> (内部通过 retain) 在这个树形结构之上，全权交由树来管理，当我们 <strong>砍去一个树枝</strong>，或者将树 <strong>连根拔起</strong>，那么在它之上的“子节点”也会跟着去除(内部通过 release)，这便是链式反应。</p>
 
-<p><a href="http://blog.leafsoar.com/archives/2013/05-29-10.html">Cocos2d-x 内存管理的一种实现</a>，此文这种实现的本质既是 <strong>强化</strong>这种 <strong>链式反应</strong>，也是解决内存可能出错的一个解决方案。如下（前文片段，具体详见前文）：</p>
+<p><a href="http://blog.leafsoar.com/archives/2013/05-29.html">Cocos2d-x 内存管理的一种实现</a>，此文这种实现的本质既是 <strong>强化</strong>这种 <strong>链式反应</strong>，也是解决内存可能出错的一个解决方案。如下（前文片段，具体详见前文）：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
