@@ -9,7 +9,9 @@
   <meta name="author" content="一叶">
 
   
-  <meta name="description" content="Cocos2d-x 跨平台特性分析 作为一款跨平台的 2D 游戏引擎 Cocos2d-x ，方便发布到各种移动平台，支持也在不断完善。可以跨平台运行，更据优势的是可以跨平台开发！ 作为运行平台来说，目前主要以 iOS 和 Android 平台为多，对其它平台也有支持，如 BlackBerry 平台 &hellip;">
+  <meta name="description" content="上篇博客，我们实现了在 Linux 下运行 cocos2d-x 游戏，这意味着我们可以在 Linux PC 机上进行游戏的编写、运行和调试，提高开发效率，而在手机上运行的过程大致分为： PC 上编写游戏源代码
+NDK 编译生成 so 库文件
+Android 工程打包生成 Apk 文件 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +86,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/archives/2013/04-19.html">善其事先利其器 Eclipse 开发 Cocos2d-x</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-19T11:20:00+08:00" pubdate data-updated="true">Apr 19<span>th</span>, 2013</time>
+        
+         | <a href="/archives/2013/04-19.html#disqus_thread">Comments</a>
+        
+        
+          | 
+
+<span class="categories">
+  
+    <a class='category' href='/archives/category/cocos2d-x/'>Cocos2d-x</a>
+  
+</span>
+
+
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="/archives/2013/04-17-17.html">上篇博客</a>，我们实现了在 Linux 下运行 cocos2d-x 游戏，这意味着我们可以在 Linux PC 机上进行游戏的编写、运行和调试，提高开发效率，而在手机上运行的过程大致分为：</p>
+
+<ul>
+<li>PC 上编写游戏源代码</li>
+<li>NDK 编译生成 so 库文件</li>
+<li>Android 工程打包生成 Apk 文件</li>
+<li>传输到模拟器或真机运行</li>
+</ul>
+
+
+<p>这么个手机上运行的过程繁琐非常，而且这只是运行在 Android 上的过程，如果通过 Android Jni 调用调试 C++ 更为麻烦，现今的 NDK 版本应该支持 Android Jni C++ 程序调试了。而在 PC 端开发运行和调试，<strong>偶尔</strong> 在手机上运行看看效果的开发过程，更为合适！虽然 cocos2d-x 是跨平台的，但常在目标平台运行，可以提前发现因平台特性可能出现的问题，并即时解决。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/archives/2013/04-19.html">Read more &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -219,6 +285,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/archives/2013/11-10.html">玩转 Cocos2d-x 脚本引擎</a>
+      </li>
+    
+      <li class="post">
         <a href="/archives/2013/07-27.html">CCScrollView 实现帮助界面、关卡选择</a>
       </li>
     
@@ -232,10 +302,6 @@
     
       <li class="post">
         <a href="/archives/2013/05-25.html">多层 UI 触摸事件的轻量级设计</a>
-      </li>
-    
-      <li class="post">
-        <a href="/archives/2013/05-22.html">Cocos2d-x 内存管理浅说</a>
       </li>
     
   </ul>
