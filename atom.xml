@@ -4,7 +4,7 @@
   <title><![CDATA[/无间落叶]]></title>
   <link href="http://blog.leafsoar.com/atom.xml" rel="self"/>
   <link href="http://blog.leafsoar.com/"/>
-  <updated>2013-11-12T00:18:04+08:00</updated>
+  <updated>2013-11-12T00:21:16+08:00</updated>
   <id>http://blog.leafsoar.com/</id>
   <author>
     <name><![CDATA[一叶]]></name>
@@ -25,6 +25,9 @@
 <p>对 Cocos2d-x 的运行机制只是略懂一二，C++ 的场景由 C++ 运行，脚本呢，先开启脚本引擎，让后将控制权交由脚本代码执行，在这过程中发生了什么，由脚本所控制的元素和 C++ 有什么不同，或者说它的本质是什么！这之前一叶一直说的是脚本引擎，而非具体那种脚本引擎，lua 或者 js (jsvascript)的引擎实现！凭着对已有知识的了解和直觉，很多疑问和可能性随之而来，它所支持的脚本语言有两种，此两种的共同之处是什么，其使用了脚本绑定技术，<strong>什么是绑定</strong> ？各种对象在内存中如何分布，如何配合在一起工作。</p>
 
 <p>为了增加探究过程的趣味性，所以一叶试想着能不能让 Cocos2d-x 现今所支持的<strong>两种脚本引擎同时运行</strong> (lua and js)，然后确定是否能在三者之间（C++, js, lua）访问同一个内存元素，如果行，便弄出来，即便不能做到，那也无所谓，这其中的过程比结果更有意思，不是吗 ~</p>
+
+<!-- More -->
+
 
 <h2>两种脚本引擎同时运行</h2>
 
