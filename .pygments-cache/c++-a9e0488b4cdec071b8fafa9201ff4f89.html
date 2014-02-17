@@ -1,0 +1,134 @@
+<div class="highlight"><pre><span class="c1">// 为了方便起见，自定义宏，并且为 varName 的实现加上了 __ls_ 的前缀，前缀可以修改，可以很长很长很长</span>
+<span class="c1">// 加 __ls_ 前缀是为了，在使用的过程只通过 set 和 get 属性包装器调用，而不要直接使用此属性</span>
+<span class="cp">#define LS_PRE(p) __ls_##p</span>
+<span class="c1">//#define LS_PRE(p) __retain_##p			// 其它前缀都行，目的是为了不让在直接使用此类型对象</span>
+
+<span class="c1">//	此处定义以弃用</span>
+<span class="c1">//	#define LS_PROPERTY_RETAIN(varType, varName, funName)\</span>
+<span class="c1">//	private: varType LS_PRE(varName);\</span>
+<span class="c1">//	public: void set##funName(varType value){\</span>
+<span class="c1">//		CC_SAFE_RELEASE_NULL(LS_PRE(varName));\</span>
+<span class="c1">//		LS_PRE(varName) = value;\</span>
+<span class="c1">//		CC_SAFE_RETAIN(LS_PRE(varName));\</span>
+<span class="c1">//	}; \</span>
+<span class="c1">//	public: varType get##funName(){return LS_PRE(varName);};</span>
+
+<span class="c1">// 经朋友提醒，发现 cocos2d-x 已经实现了相应功能的宏，并且更好用，那这里的二次包装就算是仅仅加个前缀吧 ！！！</span>
+<span class="cp">#define LS_PROPERTY_RETAIN(varType, varName, funName)\</span>
+<span class="cp">	CC_SYNTHESIZE_RETAIN(varType, LS_PRE(varName), funName);</span>
+
+<span class="c1">// 初始化和释放包装宏，主要为了封装前缀，始定义统一</span>
+<span class="cp">#define LS_P_INIT(p) LS_PRE(p)(0)</span>
+<span class="cp">#define LS_P_RELEASE(p) CC_SAFE_RELEASE_NULL(LS_PRE(p))</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 自定义类型数据：用户信息</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">LUser</span><span class="o">:</span> <span class="k">public</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCObject</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">LUser</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">(){</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+	<span class="n">LUser</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LUser()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="o">~</span><span class="n">LUser</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LUser().~():%s&quot;</span><span class="p">,</span> <span class="n">m_sUserName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+	<span class="p">};</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_sUserName</span><span class="p">;</span>		<span class="c1">// 用户名</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_sPassword</span><span class="p">;</span>		<span class="c1">// 用户密码</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">PropertyTest</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCLayer</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">PropertyTest</span><span class="p">);</span>
+
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;PropertyTest().init()&quot;</span><span class="p">);</span>
+		<span class="n">LUser</span><span class="o">*</span> <span class="n">lu</span> <span class="o">=</span> <span class="n">LUser</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+		<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sUserName</span> <span class="o">=</span> <span class="s">&quot;leafsoar&quot;</span><span class="p">;</span>
+		<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sPassword</span> <span class="o">=</span> <span class="s">&quot;123456&quot;</span><span class="p">;</span>
+		<span class="n">setLUser</span><span class="p">(</span><span class="n">lu</span><span class="p">);</span>
+
+		<span class="c1">// 为了方便在不同帧测试，启用定时器</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">scheduleUpdate</span><span class="p">();</span>
+
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">update</span><span class="p">(</span><span class="kt">float</span> <span class="n">fDelta</span><span class="p">){</span>
+	        <span class="c1">// 为了方便观察，不让 update 内部无止境的打印下去</span>
+	        <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">){</span>
+	            <span class="n">updateCount</span> <span class="o">++</span><span class="p">;</span>
+	            <span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;update index: %d&quot;</span><span class="p">,</span> <span class="n">updateCount</span><span class="p">);</span>
+	            <span class="c1">// 在不同的帧做相关操作，以便观察</span>
+	            <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+	            	<span class="c1">// 这里使用 getLUser 获取数据，而非 [__ls_]m_pLUser，所以我设置了前缀</span>
+	            	<span class="k">if</span> <span class="p">(</span><span class="n">getLUser</span><span class="p">())</span>
+	            		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;log lu: %s&quot;</span><span class="p">,</span> <span class="n">getLUser</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">m_sUserName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+
+	            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">2</span><span class="p">){</span>
+	            	<span class="c1">// 重新赋值</span>
+	            	<span class="n">LUser</span><span class="o">*</span> <span class="n">lu</span> <span class="o">=</span> <span class="n">LUser</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	            	<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sUserName</span> <span class="o">=</span> <span class="s">&quot;一叶&quot;</span><span class="p">;</span>
+	            	<span class="n">setLUser</span><span class="p">(</span><span class="n">lu</span><span class="p">);</span>
+	            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">3</span><span class="p">){</span>
+	            	<span class="k">if</span> <span class="p">(</span><span class="n">getLUser</span><span class="p">())</span>
+	            		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;log lu: %s&quot;</span><span class="p">,</span> <span class="n">getLUser</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">m_sUserName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+	            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">4</span><span class="p">){</span>
+	            	<span class="c1">// 这里调用 seLUser(0),直接取消引用持有对象，如果不调用也没有关系</span>
+	            	<span class="c1">// 因为在当前类析构的时候会自动检测释放</span>
+	            	<span class="n">setLUser</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	            <span class="p">}</span>
+	            <span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;update index: %d end&quot;</span><span class="p">,</span> <span class="n">updateCount</span><span class="p">);</span>
+	        <span class="p">}</span>
+	    <span class="p">};</span>
+
+	<span class="c1">// 构造函数，初始化 LS_PROPERTY_RETAIN 属性为空</span>
+	<span class="n">PropertyTest</span><span class="p">()</span><span class="o">:</span>
+		<span class="n">LS_P_INIT</span><span class="p">(</span><span class="n">m_pLUser</span><span class="p">),</span>
+		<span class="n">updateCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+	<span class="p">};</span>
+
+	<span class="c1">// 析构函数释放</span>
+	<span class="o">~</span><span class="n">PropertyTest</span><span class="p">(){</span>
+		<span class="n">LS_P_RELEASE</span><span class="p">(</span><span class="n">m_pLUser</span><span class="p">);</span>
+	<span class="p">};</span>
+
+	<span class="c1">// 使用 LS_PROPERTY_RETAIN 宏定义的属性，必须在构造和析构函数中初始化和释放</span>
+	<span class="c1">// 初始化为 0 或者 NULL，是为了在进行赋值操作前判断是否以有引用</span>
+	<span class="c1">// 析构函数释放是为了解除对持有对象的引用，如果有的话</span>
+	<span class="n">LS_PROPERTY_RETAIN</span><span class="p">(</span><span class="n">LUser</span><span class="o">*</span><span class="p">,</span> <span class="n">m_pLUser</span><span class="p">,</span> <span class="n">LUser</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="kt">int</span> <span class="n">updateCount</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">/// 程序执行打印如下</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">PropertyTest</span><span class="p">().</span><span class="n">init</span><span class="p">()]</span>
+<span class="c1">// init 方法创建对象并通过 setLUser 持有对象</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LUser</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span><span class="p">]</span>
+<span class="c1">// 第一帧顺利访问 持有对象</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">log</span> <span class="nl">lu:</span> <span class="n">leafsoar</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span> <span class="n">end</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span><span class="p">]</span>
+<span class="c1">// 第二帧创建新的 用户信息</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LUser</span><span class="p">()]</span>
+<span class="c1">// 通过 setLUser 改变用户信息，这会使得之前设置的用户信息“自动”释放</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LUser</span><span class="p">().</span><span class="o">~</span><span class="p">()</span><span class="o">:</span><span class="n">leafsoar</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span> <span class="n">end</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">3</span><span class="p">]</span>
+<span class="c1">// 跨帧继续访问新值</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">log</span> <span class="nl">lu:</span> <span class="err">一叶</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">3</span> <span class="n">end</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">4</span><span class="p">]</span>
+<span class="c1">// 调用了 setLUser(0) 说明已经解除了之前持有对象的引用，如果有的话</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LUser</span><span class="p">().</span><span class="o">~</span><span class="p">()</span><span class="o">:</span><span class="err">一叶</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">4</span> <span class="n">end</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">5</span> <span class="n">end</span><span class="p">]</span>
+</pre></div>

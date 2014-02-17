@@ -1,0 +1,23 @@
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">globalUpdate</span><span class="p">(</span><span class="kt">float</span> <span class="n">dt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 这里写全局定时器的逻辑处理代码</span>
+    <span class="n">CCLOG</span><span class="p">(</span><span class="s">&quot;global update&quot;</span><span class="p">);</span>
+<span class="c1">//    Director::getInstance()-&gt;popScene();</span>
+    <span class="n">count</span> <span class="o">++</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">scene</span> <span class="o">=</span> <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getRunningScene</span><span class="p">();</span>
+    <span class="n">LabelTTF</span><span class="o">*</span> <span class="n">label</span> <span class="o">=</span> <span class="p">(</span><span class="n">LabelTTF</span><span class="o">*</span><span class="p">)</span><span class="n">scene</span><span class="o">-&gt;</span><span class="n">getChildByTag</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">label</span><span class="p">){</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">LabelTTF</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;一叶 v 5~&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mi">24</span><span class="p">);</span>
+        <span class="n">label</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">300</span><span class="p">));</span>
+        <span class="n">label</span><span class="o">-&gt;</span><span class="n">setColor</span><span class="p">(</span><span class="n">Color3B</span><span class="o">::</span><span class="n">BLACK</span><span class="p">);</span>
+        <span class="n">scene</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">label</span><span class="o">-&gt;</span><span class="n">setScale</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">ScriptingCore</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">runScript</span><span class="p">(</span><span class="s">&quot;jsbMethod.js&quot;</span><span class="p">);</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">count</span> <span class="o">%</span><span class="mi">3</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">LuaEngine</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">executeScriptFile</span><span class="p">(</span><span class="s">&quot;luaMethod.lua&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

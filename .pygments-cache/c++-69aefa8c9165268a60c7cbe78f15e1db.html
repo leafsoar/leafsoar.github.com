@@ -1,0 +1,22 @@
+<div class="highlight"><pre><span class="c1">// 组[1] :</span>
+<span class="nl">FrameSize:</span> 			<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">420</span>
+<span class="nl">WinSize:</span> 		   	<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">480</span>
+<span class="nl">VisibleSize:</span>		<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">420</span>
+<span class="nl">VisibleOrigin:</span>		<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="c1">// 组[2] :相比 组 [1] FrameSize 不变 VisibleSize 和 VisibleOrigin 随着 WinSize 的变小而变小</span>
+<span class="nl">FrameSize:</span> 			<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">420</span>
+<span class="nl">WinSize:</span> 		   	<span class="n">width</span> <span class="o">=</span> <span class="mi">480</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">320</span>
+<span class="nl">VisibleSize:</span>		<span class="n">width</span> <span class="o">=</span> <span class="mi">480</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">280</span>
+<span class="nl">VisibleOrigin:</span>		<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="c1">// 组[3] : 相比组 [1] WinSize 不变，VisibleSize 随着 FrameSize 的比例改变而改变</span>
+<span class="nl">FrameSize:</span> 			<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">540</span>
+<span class="nl">WinSize:</span> 		   	<span class="n">width</span> <span class="o">=</span> <span class="mi">720</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">480</span>
+<span class="nl">VisibleSize:</span>		<span class="n">width</span> <span class="o">=</span> <span class="mi">640</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">480</span>
+<span class="nl">VisibleOrigin:</span>		<span class="n">x</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1">// WinSize VisibleSize VisibleOrigin 与都设计的分辨率相关，满足如下关系</span>
+<span class="n">WinSize</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="n">VisibleOrigin</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">VisibleSize</span><span class="p">.</span><span class="n">width</span>
+<span class="n">WinSize</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="p">(</span><span class="n">VisibleOrigin</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">VisibleSize</span><span class="p">.</span><span class="n">height</span>
+</pre></div>

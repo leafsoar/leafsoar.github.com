@@ -1,0 +1,37 @@
+<div class="highlight"><pre><span class="cp">#include &quot;main.h&quot;</span>
+<span class="cp">#include &quot;../Classes/AppDelegate.h&quot;</span>
+<span class="cp">#include &quot;cocos2d.h&quot;</span>
+
+
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;unistd.h&gt;</span>
+<span class="cp">#include &lt;string&gt;</span>
+
+<span class="n">USING_NS_CC</span><span class="p">;</span>
+
+<span class="c1">// 500 is enough?</span>
+<span class="cp">#define MAXPATHLEN 500</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// get application path</span>
+    <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">fullpath</span><span class="p">[</span><span class="n">MAXPATHLEN</span><span class="p">];</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="n">readlink</span><span class="p">(</span><span class="s">&quot;/proc/self/exe&quot;</span><span class="p">,</span> <span class="n">fullpath</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">fullpath</span><span class="p">));</span>
+    <span class="n">fullpath</span><span class="p">[</span><span class="n">length</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">resourcePath</span> <span class="o">=</span> <span class="n">fullpath</span><span class="p">;</span>
+    <span class="n">resourcePath</span> <span class="o">=</span> <span class="n">resourcePath</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">resourcePath</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">));</span>
+    <span class="n">resourcePath</span> <span class="o">+=</span> <span class="s">&quot;/../../../Resources/&quot;</span><span class="p">;</span>
+    
+    <span class="c1">// create the application instance</span>
+    <span class="n">AppDelegate</span> <span class="n">app</span><span class="p">;</span>
+    <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setResourceRootPath</span><span class="p">(</span><span class="n">resourcePath</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="n">CCEGLView</span><span class="o">*</span> <span class="n">eglView</span> <span class="o">=</span> <span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">();</span>
+    <span class="n">eglView</span><span class="o">-&gt;</span><span class="n">setFrameSize</span><span class="p">(</span><span class="mi">720</span><span class="p">,</span> <span class="mi">480</span><span class="p">);</span>
+<span class="c1">//    eglView-&gt;setFrameSize(480, 320);</span>
+
+    <span class="k">return</span> <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>

@@ -1,0 +1,99 @@
+<div class="highlight"><pre><span class="c1">////////////////////</span>
+<span class="c1">// GlobalSchedule.h</span>
+<span class="c1">////////////////////	</span>
+
+<span class="cp">#ifndef GLOBALSCHEDULE_H_</span>
+<span class="cp">#define GLOBALSCHEDULE_H_</span>
+
+<span class="cp">#include &quot;cocos2d.h&quot;</span>
+
+<span class="n">USING_NS_CC</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> *	全局定时器</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">GlobalSchedule</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCObject</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// 开始全局定时器 fInterval: 时间间隔 ; fDelay: 延迟运行</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">start</span><span class="p">(</span><span class="kt">float</span> <span class="n">fInterval</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="kt">float</span> <span class="n">fDelay</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">);</span>
+	<span class="c1">// 停止全局定时器</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">stop</span><span class="p">();</span>
+	<span class="c1">// 全局定时器暂停</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">pause</span><span class="p">();</span>
+	<span class="c1">// 全局定时器暂停恢复</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">resume</span><span class="p">();</span>
+
+	<span class="c1">// 全局定时器主逻辑实现</span>
+	<span class="kt">void</span> <span class="n">globalUpdate</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// 构造函数私有化，只能通过 start 来启用全局定时器</span>
+	<span class="n">GlobalSchedule</span><span class="p">(</span><span class="kt">float</span> <span class="n">fInterval</span><span class="p">,</span> <span class="kt">float</span> <span class="n">fDelay</span><span class="p">);</span>
+	<span class="o">~</span><span class="n">GlobalSchedule</span><span class="p">();</span>
+
+	<span class="c1">// 静态变量保持单例</span>
+	<span class="k">static</span> <span class="n">GlobalSchedule</span><span class="o">*</span> <span class="n">m_pSchedule</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cp">#endif </span><span class="cm">/* GLOBALSCHEDULE_H_ */</span><span class="cp"></span>
+
+<span class="c1">/////////////////////</span>
+<span class="c1">// GlobalSchedule.cpp</span>
+<span class="c1">/////////////////////	</span>
+
+<span class="cp">#include &quot;GlobalSchedule.h&quot;</span>
+
+<span class="cp">#define SCHEDULE CCDirector::sharedDirector()-&gt;getScheduler()</span>
+
+<span class="n">GlobalSchedule</span><span class="o">*</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">m_pSchedule</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">GlobalSchedule</span><span class="p">(</span><span class="kt">float</span> <span class="n">fInterval</span><span class="p">,</span> <span class="kt">float</span> <span class="n">fDelay</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;GlobalSchedule()&quot;</span><span class="p">);</span>
+
+	<span class="n">CCAssert</span><span class="p">(</span><span class="o">!</span><span class="n">m_pSchedule</span><span class="p">,</span> <span class="s">&quot;已定义，不能重复定义&quot;</span><span class="p">);</span>
+
+	<span class="n">SCHEDULE</span><span class="o">-&gt;</span><span class="n">scheduleSelector</span><span class="p">(</span>
+			<span class="n">schedule_selector</span><span class="p">(</span><span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">globalUpdate</span><span class="p">),</span> <span class="k">this</span><span class="p">,</span> <span class="n">fInterval</span><span class="p">,</span>
+			<span class="kc">false</span><span class="p">,</span>
+			<span class="n">kCCRepeatForever</span><span class="p">,</span> <span class="n">fDelay</span><span class="p">);</span>
+
+	<span class="n">m_pSchedule</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">GlobalSchedule</span><span class="o">::~</span><span class="n">GlobalSchedule</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;GlobalSchedule().~()&quot;</span><span class="p">);</span>
+
+	<span class="n">SCHEDULE</span><span class="o">-&gt;</span><span class="n">unscheduleSelector</span><span class="p">(</span>
+			<span class="n">schedule_selector</span><span class="p">(</span><span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">globalUpdate</span><span class="p">),</span> <span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">globalUpdate</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 这里写全局定时器的逻辑处理代码</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;global update&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">start</span><span class="p">(</span><span class="kt">float</span> <span class="n">fInterval</span><span class="p">,</span> <span class="kt">float</span> <span class="n">fDelay</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">new</span> <span class="n">GlobalSchedule</span><span class="p">(</span><span class="n">fInterval</span><span class="p">,</span> <span class="n">fDelay</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">stop</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;GlobalSchedule().stop()&quot;</span><span class="p">);</span>
+
+	<span class="n">CCAssert</span><span class="p">(</span><span class="n">m_pSchedule</span><span class="p">,</span> <span class="s">&quot;未定义&quot;</span><span class="p">);</span>
+	<span class="n">CC_SAFE_DELETE</span><span class="p">(</span><span class="n">m_pSchedule</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">pause</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;GlobalSchedule().pause()&quot;</span><span class="p">);</span>
+
+	<span class="n">CCAssert</span><span class="p">(</span><span class="n">m_pSchedule</span><span class="p">,</span> <span class="s">&quot;未定义&quot;</span><span class="p">);</span>
+	<span class="n">SCHEDULE</span><span class="o">-&gt;</span><span class="n">pauseTarget</span><span class="p">(</span><span class="n">m_pSchedule</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">GlobalSchedule</span><span class="o">::</span><span class="n">resume</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;GlobalSchedule().resume()&quot;</span><span class="p">);</span>
+
+	<span class="n">CCAssert</span><span class="p">(</span><span class="n">m_pSchedule</span><span class="p">,</span> <span class="s">&quot; 未定义&quot;</span><span class="p">);</span>
+	<span class="n">SCHEDULE</span><span class="o">-&gt;</span><span class="n">resumeTarget</span><span class="p">(</span><span class="n">m_pSchedule</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>

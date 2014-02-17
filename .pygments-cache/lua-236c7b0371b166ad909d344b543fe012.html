@@ -1,0 +1,11 @@
+<div class="highlight"><pre><span class="c1">-- luaMethod.lua 具体实现</span>
+<span class="n">cclog</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+<span class="k">end</span>
+
+<span class="n">cclog</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">lua method .&quot;</span><span class="p">);</span>
+
+<span class="kd">local</span> <span class="n">scene</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="p">:</span><span class="n">getInstance</span><span class="p">():</span><span class="n">getRunningScene</span><span class="p">()</span>
+<span class="kd">local</span> <span class="n">label</span> <span class="o">=</span> <span class="n">scene</span><span class="p">:</span><span class="n">getChildByTag</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">label</span><span class="p">:</span><span class="n">setScale</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+</pre></div>

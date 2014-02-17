@@ -1,0 +1,29 @@
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">pop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">m_pCurReleasePool</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+     <span class="kt">int</span> <span class="n">nCount</span> <span class="o">=</span> <span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">();</span>
+ 	<span class="c1">// 清楚对 创建对象 的引用</span>
+    <span class="n">m_pCurReleasePool</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+
+	<span class="c1">// 如果大于 1，这也保证着，在任何时候，总有一个释放池是可以使用的</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">nCount</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">{</span>
+		  <span class="c1">// 移除当前的释放池</span>
+        <span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">removeObjectAtIndex</span><span class="p">(</span><span class="n">nCount</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">//         if(nCount &gt; 1)</span>
+<span class="c1">//         {</span>
+<span class="c1">//             m_pCurReleasePool = m_pReleasePoolStack-&gt;objectAtIndex(nCount - 2);</span>
+<span class="c1">//             return;</span>
+<span class="c1">//         }</span>
+		<span class="c1">// 将当前释放池设定为前一个释放池，也就是 “出栈”的操作</span>
+        <span class="n">m_pCurReleasePool</span> <span class="o">=</span> <span class="p">(</span><span class="n">CCAutoreleasePool</span><span class="o">*</span><span class="p">)</span><span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">objectAtIndex</span><span class="p">(</span><span class="n">nCount</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/*m_pCurReleasePool = NULL;*/</span>
+<span class="p">}</span>
+</pre></div>

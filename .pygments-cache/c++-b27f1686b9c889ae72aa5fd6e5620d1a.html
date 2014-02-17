@@ -1,0 +1,57 @@
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">pop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">m_pCurReleasePool</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+	<span class="c1">// 当前释放池个数，pop 使用栈结构</span>
+     <span class="kt">int</span> <span class="n">nCount</span> <span class="o">=</span> <span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">();</span>
+ 	<span class="c1">// 释放池当中存放的都是 创建时期 对象，此时解除释放池引用</span>
+    <span class="n">m_pCurReleasePool</span><span class="o">-&gt;</span><span class="n">clear</span><span class="p">();</span>
+
+	<span class="c1">// 当前释放池，出栈，在这里可以看到判断 nCount 是否大于 1，文后将会对此做具体说明</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">nCount</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">removeObjectAtIndex</span><span class="p">(</span><span class="n">nCount</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">//         if(nCount &gt; 1)</span>
+<span class="c1">//         {</span>
+<span class="c1">//             m_pCurReleasePool = m_pReleasePoolStack-&gt;objectAtIndex(nCount - 2);</span>
+<span class="c1">//             return;</span>
+<span class="c1">//         }</span>
+        <span class="n">m_pCurReleasePool</span> <span class="o">=</span> <span class="p">(</span><span class="n">CCAutoreleasePool</span><span class="o">*</span><span class="p">)</span><span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">objectAtIndex</span><span class="p">(</span><span class="n">nCount</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/*m_pCurReleasePool = NULL;*/</span>
+<span class="p">}</span>
+
+<span class="c1">// 释放池引用清理工作</span>
+<span class="kt">void</span> <span class="n">CCAutoreleasePool</span><span class="o">::</span><span class="n">clear</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// 如果释放池存在 创建时期 的对象</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">m_pManagedObjectArray</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//CCAutoreleasePool* pReleasePool;</span>
+<span class="cp">#ifdef _DEBUG</span>
+        <span class="kt">int</span> <span class="n">nIndex</span> <span class="o">=</span> <span class="n">m_pManagedObjectArray</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="cp">#endif</span>
+
+        <span class="n">CCObject</span><span class="o">*</span> <span class="n">pObj</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="n">CCARRAY_FOREACH_REVERSE</span><span class="p">(</span><span class="n">m_pManagedObjectArray</span><span class="p">,</span> <span class="n">pObj</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">pObj</span><span class="p">)</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="o">--</span><span class="p">(</span><span class="n">pObj</span><span class="o">-&gt;</span><span class="n">m_uAutoReleaseCount</span><span class="p">);</span>
+            <span class="c1">//(*it)-&gt;release();</span>
+            <span class="c1">//delete (*it);</span>
+<span class="cp">#ifdef _DEBUG</span>
+            <span class="n">nIndex</span><span class="o">--</span><span class="p">;</span>
+<span class="cp">#endif</span>
+        <span class="p">}</span>
+		<span class="c1">// 移除释放池对创建时期对象的引用，从而使对象交由使用者全权管理</span>
+        <span class="n">m_pManagedObjectArray</span><span class="o">-&gt;</span><span class="n">removeAllObjects</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

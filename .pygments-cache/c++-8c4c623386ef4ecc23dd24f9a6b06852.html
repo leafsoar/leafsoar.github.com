@@ -1,0 +1,36 @@
+<div class="highlight"><pre><span class="c1">// 修改层内容实现</span>
+<span class="n">CCLayer</span><span class="o">*</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">getContainLayer</span><span class="p">(){</span>
+    <span class="n">m_nPageCount</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+	<span class="c1">// ..... 此处省略，参照上文</span>
+
+	<span class="c1">// 在此处添加关卡精灵</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">levelCount</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CCNode</span><span class="o">*</span> <span class="n">level</span> <span class="o">=</span> <span class="n">getSpriteByLevel</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+        <span class="c1">// 设置位置</span>
+        <span class="kt">int</span> <span class="n">curPageIndex</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="n">widthCount</span> <span class="o">*</span> <span class="n">heightCount</span><span class="p">);</span>
+        <span class="kt">float</span> <span class="n">xOffset</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="mi">90</span><span class="p">;</span>
+        <span class="kt">float</span> <span class="n">yOffset</span> <span class="o">=</span> <span class="n">winSize</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="p">((</span><span class="n">i</span> <span class="o">%</span> <span class="p">(</span><span class="n">widthCount</span> <span class="o">*</span> <span class="n">heightCount</span><span class="p">))</span> <span class="o">/</span> <span class="n">widthCount</span> <span class="o">*</span> <span class="mi">120</span> <span class="o">+</span> <span class="mi">180</span><span class="p">);</span>
+        
+        <span class="n">level</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccp</span><span class="p">(</span><span class="n">xOffset</span> <span class="o">+</span> <span class="n">winSize</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">curPageIndex</span><span class="p">,</span> <span class="n">yOffset</span><span class="p">));</span>
+		<span class="c1">// 这里使用了 zOrder = 2，用此值来构建层次关系，如后文将要添加的显示点击背景效果</span>
+        <span class="n">layer</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">level</span> <span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">layer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 这里是上面所用到的方法</span>
+<span class="n">CCNode</span><span class="o">*</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">getSpriteByLevel</span><span class="p">(</span><span class="kt">int</span> <span class="n">level</span><span class="p">){</span>
+
+    <span class="n">CCSprite</span><span class="o">*</span> <span class="n">sprite</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;level/level.png&quot;</span><span class="p">);</span>
+    <span class="c1">// 添加关卡标示</span>
+    <span class="n">CCString</span><span class="o">*</span> <span class="n">str</span> <span class="o">=</span> <span class="n">CCString</span><span class="o">::</span><span class="n">createWithFormat</span><span class="p">(</span><span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">CCLabelBMFont</span><span class="o">*</span> <span class="n">label</span> <span class="o">=</span> <span class="n">CCLabelBMFont</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">getCString</span><span class="p">(),</span><span class="s">&quot;level/prim30.fnt&quot;</span><span class="p">);</span>
+    <span class="n">label</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccp</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">45</span><span class="p">));</span>
+    <span class="n">sprite</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">label</span><span class="p">);</span>
+	
+    <span class="c1">// 这里可以再为 关卡精灵做些装饰，就像 lable 一样，如样式，关卡锁等其它元素</span>
+    
+    <span class="k">return</span> <span class="n">sprite</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

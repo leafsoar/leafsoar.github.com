@@ -1,0 +1,30 @@
+<div class="highlight"><pre><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
+
+<span class="cp">include $(CLEAR_VARS)</span>
+
+<span class="nv">LOCAL_MODULE</span> <span class="o">:=</span> game_shared
+
+<span class="nv">LOCAL_MODULE_FILENAME</span> <span class="o">:=</span> libgame
+
+<span class="c"># 定义 all-cpp-files 返回当前路径和 Classes 路径想的所有 cpp 文件，注意：这里只考虑 cpp 而没有 c，如果需要自行添加</span>
+<span class="cp">define all-cpp-files</span>
+<span class="k">$(</span>patsubst jni/%,%, <span class="k">$(</span>shell find <span class="k">$(</span>LOCAL_PATH<span class="k">)</span>/../../Classes/ <span class="k">$(</span>LOCAL_PATH<span class="k">)</span>/hellocpp -name <span class="s2">&quot;*.cpp&quot;</span><span class="k">))</span>  
+<span class="cp">endef</span>
+
+<span class="c"># 这里使用新的方式替换换来的方式，以自动添加源文件</span>
+LOCAL_SRC_FILES :<span class="o">=</span> <span class="k">$(</span>call all-cpp-files<span class="k">)</span>
+
+<span class="c">#LOCAL_SRC_FILES := hellocpp/main.cpp \</span>
+<span class="c">#                  ../../Classes/AppDelegate.cpp \</span>
+<span class="c">#                  ../../Classes/HelloWorldScene.cpp</span>
+	                   
+LOCAL_C_INCLUDES :<span class="o">=</span> <span class="k">$(</span>LOCAL_PATH<span class="k">)</span>/../../Classes 
+
+LOCAL_WHOLE_STATIC_LIBRARIES :<span class="o">=</span> cocos2dx_static cocosdenshion_static cocos_extension_static
+            
+<span class="cp">include $(BUILD_SHARED_LIBRARY)</span>
+
+<span class="k">$(</span>call import-module,CocosDenshion/android<span class="k">)</span> <span class="se">\</span>
+<span class="k">$(</span>call import-module,cocos2dx<span class="k">)</span> <span class="se">\</span>
+<span class="k">$(</span>call import-module,extensions<span class="k">)</span>		<span class="c"># 根据自己需要是否启用，上面的静态库同样</span>
+</pre></div>

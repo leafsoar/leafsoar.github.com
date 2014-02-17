@@ -1,0 +1,12 @@
+<div class="highlight"><pre><span class="c1">// 方式一：那么我们的使用过程</span>
+<span class="n">LUser</span><span class="o">*</span> <span class="n">lu</span> <span class="o">=</span> <span class="n">LUser</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sSprite</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;a.png&quot;</span><span class="p">);</span>
+<span class="c1">// 如果这里不 retain  则以后就用不到了</span>
+<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sSprite</span><span class="o">-&gt;</span><span class="n">retain</span><span class="p">();</span>
+
+<span class="c1">// 方式二：使用方法</span>
+<span class="n">LUser</span><span class="o">*</span> <span class="n">lu</span> <span class="o">=</span> <span class="n">LUser</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sUserName</span> <span class="o">=</span> <span class="s">&quot;一叶&quot;</span><span class="p">;</span>
+<span class="c1">// 这里的 sprite 会随着 lu 的消亡而消亡，不用管释放问题了</span>
+<span class="n">lu</span><span class="o">-&gt;</span><span class="n">setSprite</span><span class="p">(</span><span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;a.png&quot;</span><span class="p">));</span>
+</pre></div>

@@ -1,0 +1,24 @@
+<div class="highlight"><pre><span class="n">LS_PROPERTY_RETAIN</span><span class="p">(</span><span class="n">LUser</span><span class="o">*</span><span class="p">,</span> <span class="n">m_pLUser</span><span class="p">,</span> <span class="n">LUser</span><span class="p">);</span>
+<span class="c1">// 展开如下</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// 定义私有属性</span>
+	<span class="n">LUser</span><span class="o">*</span> <span class="n">__ls_m_pLUser</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// 实现 set 方法</span>
+	<span class="kt">void</span> <span class="n">setLUser</span><span class="p">(</span><span class="n">LUser</span><span class="o">*</span> <span class="n">var</span><span class="p">){</span>
+		<span class="c1">// 首先释放当前的持有对象，没有则罢，如果有，那么就 release，因为如果有值，毕定是通过此方法设置并 retain 的</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">__ls_m_pLUser</span> <span class="o">!=</span> <span class="n">var</span><span class="p">){</span>
+			<span class="c1">// 持有新的对象，这些都是 SAFE  安全操作的</span>
+			<span class="n">CC_SAFE_RETAIN</span><span class="p">(</span><span class="n">var</span><span class="p">);</span>
+			<span class="c1">// 这里是 cocos2d-x 提供的宏，就不展开了				</span>
+			<span class="n">CC_SAFE_RELEASE</span><span class="p">(</span><span class="n">__ls_m_pLUser</span><span class="p">);</span>
+			<span class="c1">// 设置新的属性</span>
+			<span class="n">__ls_m_pLUser</span> <span class="o">=</span> <span class="n">var</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">};</span> 
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">LUser</span><span class="o">*</span>  <span class="n">getLUser</span><span class="p">(){</span>
+		<span class="c1">// 直接返回持有对象</span>
+		<span class="k">return</span> <span class="n">__ls_m_pLUser</span><span class="p">;</span>
+	<span class="p">};</span>
+</pre></div>

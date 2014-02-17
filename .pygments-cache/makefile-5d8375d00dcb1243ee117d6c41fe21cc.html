@@ -1,0 +1,120 @@
+<div class="highlight"><pre><span class="nv">CC</span>      <span class="o">=</span> gcc
+<span class="nv">CXX</span>     <span class="o">=</span> g++
+<span class="nv">TARGET</span>	<span class="o">=</span> leafsoar			<span class="c"># 为了保持通用性，干脆起个不相干的目标文件，此名随意</span>
+<span class="nv">CCFLAGS</span> <span class="o">=</span> -Wall
+<span class="nv">CXXFLAGS</span> <span class="o">=</span> -Wall
+<span class="nv">VISIBILITY</span> <span class="o">=</span> 
+
+<span class="c"># COCOS2DX_ROOT = /home/leafsoar/...		# 如果已经配置过此环境变量，可以不需要此，否则添加此变量值</span>
+
+<span class="nv">COCOS2DX_PATH</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx
+<span class="nv">INCLUDES</span> <span class="o">=</span>  -I../ <span class="se">\</span>
+			-I../Classes <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span> <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/libfreetype2 <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/cocoa <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/include <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/linux <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/glew-1.7.0/glew-1.7.0/include/ <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/kazmath/include <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/libxml2 <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/libjpeg  <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/CocosDenshion/include <span class="se">\</span>
+<span class="c">#			-I$(COCOS2DX_ROOT)/extensions/ \			# 根据自己需要是否包含 extensions 扩展</span>
+
+<span class="nv">DEFINES</span> <span class="o">=</span> -DLINUX
+
+<span class="c"># 获取源文件列表</span>
+<span class="cp">define all-cpp-files</span>
+<span class="k">$(</span>patsubst ./%,%, <span class="k">$(</span>shell find  ../Classes ./ -name <span class="s2">&quot;*.cpp&quot;</span><span class="k">))</span>  
+<span class="cp">endef</span>
+
+<span class="c"># 我是打算让所以编译后的 &quot;.o&quot; 临时文件，全部生成在 &quot;obj&quot; 目录，而不是和源代码同目录</span>
+<span class="cp">define all-cpp-dir</span>
+<span class="k">$(</span>patsubst ../%,obj/%, <span class="k">$(</span>shell find  ../Classes -type d<span class="k">))</span>  
+<span class="cp">endef</span>
+
+<span class="c"># obj 默认目录</span>
+<span class="nv">OBJDIR</span><span class="o">=</span>obj/Classes
+
+<span class="c"># 获取所有的编译文件列表</span>
+<span class="nv">OBJECTS</span><span class="o">=</span><span class="k">$(</span>patsubst %.cpp,<span class="k">$(</span>OBJDIR<span class="k">)</span>/%.o,<span class="k">$(</span>call all-cpp-files<span class="k">))</span>
+
+<span class="c"># 获取所有的编译文件路径，如果不存在路径则，编译可能出现问题</span>
+<span class="nv">OBJECTS_DIR</span><span class="o">=</span><span class="k">$(</span>call all-cpp-dir<span class="k">)</span>
+
+<span class="c"># 如果目录不存在，则创建相应的目录，-p 命令保证了，如果存在，不需要重新创建，这样没有修改的源文件就无需重新编译，提高速度</span>
+<span class="k">$(</span>shell mkdir -p obj<span class="k">)</span>
+<span class="k">$(</span>shell mkdir -p <span class="k">$(</span>OBJECTS_DIR<span class="k">))</span>
+
+<span class="c">#echo:</span>
+<span class="c">#	@echo $(OBJECTS_DIR)</span>
+
+<span class="c">#OBJECTS = ./main.o \</span>
+<span class="c">#        ../Classes/AppDelegate.o</span>
+
+LBITS :<span class="o">=</span> <span class="k">$(</span>shell getconf LONG_BIT<span class="k">)</span>
+<span class="cp">ifeq ($(LBITS),64)</span>
+<span class="nv">STATICLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/libraries/lib64
+<span class="cp">else</span>
+<span class="nv">STATICLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/libraries
+<span class="cp">endif</span>
+<span class="nv">STATICLIBS</span> <span class="o">=</span> 
+<span class="nv">STATICLIBS</span> <span class="o">=</span> <span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libfreetype.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libxml2.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libpng.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libjpeg.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libtiff.a <span class="se">\</span>
+<span class="c">#				$(STATICLIBS_DIR)/libGLEW.a \</span>
+
+<span class="nv">SHAREDLIBS</span> <span class="o">=</span> 
+<span class="cp">ifeq ($(LBITS),64)</span>
+<span class="nv">SHAREDLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/CocosDenshion/third_party/fmod/lib64/api/lib
+<span class="nv">SHAREDLIBS</span> <span class="o">=</span> -L<span class="k">$(</span>SHAREDLIBS_DIR<span class="k">)</span> -lfmodex64
+<span class="cp">else</span>
+<span class="nv">SHAREDLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/CocosDenshion/third_party/fmod/api/lib
+<span class="nv">SHAREDLIBS</span> <span class="o">=</span> -L<span class="k">$(</span>SHAREDLIBS_DIR<span class="k">)</span> -lfmodex
+<span class="cp">endif</span>
+
+SHAREDLIBS +<span class="o">=</span> -lglfw -lGL
+SHAREDLIBS +<span class="o">=</span> -Wl,-rpath,<span class="k">$(</span>SHAREDLIBS_DIR<span class="k">)</span>
+SHAREDLIBS +<span class="o">=</span> -L<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/glew-1.7.0/glew-1.7.0/lib -lGLEW
+SHAREDLIBS +<span class="o">=</span> -Wl,-rpath,<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/glew-1.7.0/glew-1.7.0/lib
+
+
+<span class="nv">BIN_DIR_ROOT</span><span class="o">=</span>bin
+<span class="nv">BIN_DIR</span> <span class="o">=</span> <span class="k">$(</span>BIN_DIR_ROOT<span class="k">)</span>
+
+debug: <span class="nv">BIN_DIR</span> <span class="o">=</span> <span class="k">$(</span>BIN_DIR_ROOT<span class="k">)</span>/debug
+debug: CCFLAGS +<span class="o">=</span> -g3 -O0
+debug: CXXFLAGS +<span class="o">=</span> -g3 -O0
+debug: SHAREDLIBS +<span class="o">=</span> -L<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion
+debug: SHAREDLIBS +<span class="o">=</span> -Wl,-rpath,<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/lib/linux/Debug/
+debug: DEFINES +<span class="o">=</span> -DDEBUG
+debug: <span class="k">$(</span>TARGET<span class="k">)</span>
+
+release: <span class="nv">BIN_DIR</span> <span class="o">=</span> <span class="k">$(</span>BIN_DIR_ROOT<span class="k">)</span>/release
+release: CCFLAGS +<span class="o">=</span> -O3
+release: CXXFLAGS +<span class="o">=</span> -O3
+release: SHAREDLIBS +<span class="o">=</span> -L.<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/lib/linux/Release -lcocos2d -lrt -lz -lcocosdenshion
+release: SHAREDLIBS +<span class="o">=</span> -Wl,-rpath,<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/lib/linux/Release/
+release: DEFINES +<span class="o">=</span> -DNDEBUG
+release: <span class="k">$(</span>TARGET<span class="k">)</span>
+
+<span class="c">####### Build rules</span>
+<span class="k">$(</span>TARGET<span class="k">)</span>: <span class="k">$(</span>OBJECTS<span class="k">)</span> 
+	mkdir -p <span class="k">$(</span>BIN_DIR<span class="k">)</span>
+	<span class="k">$(</span>CXX<span class="k">)</span> <span class="k">$(</span>CXXFLAGS<span class="k">)</span> <span class="k">$(</span>INCLUDES<span class="k">)</span> <span class="k">$(</span>DEFINES<span class="k">)</span> <span class="k">$(</span>OBJECTS<span class="k">)</span> -o <span class="k">$(</span>BIN_DIR<span class="k">)</span>/<span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>SHAREDLIBS<span class="k">)</span> <span class="k">$(</span>STATICLIBS<span class="k">)</span>
+
+<span class="c">####### Compile</span>
+<span class="k">$(</span>OBJDIR<span class="k">)</span>/%.o: %.cpp
+	<span class="k">$(</span>CXX<span class="k">)</span> <span class="k">$(</span>CXXFLAGS<span class="k">)</span> <span class="k">$(</span>INCLUDES<span class="k">)</span> <span class="k">$(</span>DEFINES<span class="k">)</span> <span class="k">$(</span>VISIBILITY<span class="k">)</span> -c <span class="nv">$&lt;</span> -o <span class="nv">$@</span>
+
+%.o: %.c
+	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CCFLAGS<span class="k">)</span> <span class="k">$(</span>INCLUDES<span class="k">)</span> <span class="k">$(</span>DEFINES<span class="k">)</span> <span class="k">$(</span>VISIBILITY<span class="k">)</span> -c <span class="nv">$&lt;</span> -o <span class="nv">$@</span>
+
+clean: 
+	rm -f <span class="k">$(</span>OBJECTS<span class="k">)</span> <span class="k">$(</span>TARGET<span class="k">)</span> core
+</pre></div>

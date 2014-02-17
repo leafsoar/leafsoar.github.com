@@ -1,0 +1,52 @@
+<div class="highlight"><pre><span class="kt">bool</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">applicationDidFinishLaunching</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// initialize director</span>
+    <span class="n">Director</span> <span class="o">*</span><span class="n">pDirector</span> <span class="o">=</span> <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+    <span class="n">pDirector</span><span class="o">-&gt;</span><span class="n">setOpenGLView</span><span class="p">(</span><span class="n">EGLView</span><span class="o">::</span><span class="n">getInstance</span><span class="p">());</span>
+    
+    <span class="n">EGLView</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setDesignResolutionSize</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="n">ResolutionPolicy</span><span class="o">::</span><span class="n">NO_BORDER</span><span class="p">);</span>
+
+    <span class="c1">// turn on display FPS</span>
+    <span class="n">pDirector</span><span class="o">-&gt;</span><span class="n">setDisplayStats</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+    <span class="c1">// set FPS. the default value is 1.0/60 if you don&#39;t call this</span>
+    <span class="n">pDirector</span><span class="o">-&gt;</span><span class="n">setAnimationInterval</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
+    
+<span class="c1">//    runLua();</span>
+    <span class="n">runCpp</span><span class="p">();</span>
+<span class="c1">//    runJsb();</span>
+    
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">runCpp</span><span class="p">(){</span>
+    <span class="k">auto</span> <span class="n">scene</span> <span class="o">=</span> <span class="n">HelloLeafsoar</span><span class="o">::</span><span class="n">scene</span><span class="p">();</span>
+    <span class="n">Director</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">runWithScene</span><span class="p">(</span><span class="n">scene</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">runJsb</span><span class="p">(){</span>
+    <span class="n">ScriptingCore</span><span class="o">*</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">ScriptingCore</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">register_all_cocos2dx</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">register_all_cocos2dx_extension</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">register_cocos2dx_js_extensions</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">jsb_register_chipmunk</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">register_all_cocos2dx_extension_manual</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">register_CCBuilderReader</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">jsb_register_system</span><span class="p">);</span>
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">addRegisterCallback</span><span class="p">(</span><span class="n">JSB_register_opengl</span><span class="p">);</span>
+    
+    <span class="n">sc</span><span class="o">-&gt;</span><span class="n">start</span><span class="p">();</span>
+    
+    <span class="n">ScriptEngineProtocol</span> <span class="o">*</span><span class="n">pEngine</span> <span class="o">=</span> <span class="n">ScriptingCore</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+    <span class="n">ScriptEngineManager</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setScriptEngine</span><span class="p">(</span><span class="n">pEngine</span><span class="p">);</span>
+    <span class="n">ScriptingCore</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">runScript</span><span class="p">(</span><span class="s">&quot;main.js&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">runLua</span><span class="p">(){</span>
+    <span class="n">LuaEngine</span><span class="o">*</span> <span class="n">luaEngine</span> <span class="o">=</span> <span class="n">LuaEngine</span><span class="o">::</span><span class="n">getInstance</span><span class="p">();</span>
+    <span class="n">ScriptEngineManager</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setScriptEngine</span><span class="p">(</span><span class="n">luaEngine</span><span class="p">);</span>
+    
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">::</span><span class="n">getInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">fullPathForFilename</span><span class="p">(</span><span class="s">&quot;hello.lua&quot;</span><span class="p">);</span>
+    <span class="n">luaEngine</span><span class="o">-&gt;</span><span class="n">executeScriptFile</span><span class="p">(</span><span class="n">path</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>

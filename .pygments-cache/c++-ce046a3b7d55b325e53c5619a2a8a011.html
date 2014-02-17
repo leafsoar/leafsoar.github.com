@@ -1,0 +1,59 @@
+<div class="highlight"><pre><span class="c1">// 继承 LsTouchEvent 并实现接口函数</span>
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">touchEventAction</span><span class="p">(</span><span class="n">LsTouch</span> <span class="o">*</span><span class="n">touch</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">touch</span><span class="p">)</span>
+        <span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;touch event action id: %d  type: %d&quot;</span><span class="p">,</span> <span class="n">touch</span><span class="o">-&gt;</span><span class="n">getEventId</span><span class="p">(),</span> <span class="n">type</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 改写上文，返回精灵函数，使之变为可操作项</span>
+<span class="n">CCNode</span><span class="o">*</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">getSpriteByLevel</span><span class="p">(</span><span class="kt">int</span> <span class="n">level</span><span class="p">){</span>
+
+	<span class="c1">// CCSprite* sprite = CCSprite::create(&quot;level/level.png&quot;);</span>
+    <span class="c1">// // 添加关卡标示</span>
+    <span class="c1">// CCString* str = CCString::createWithFormat(&quot;%d&quot;, level + 1);</span>
+    <span class="c1">// CCLabelBMFont* label = CCLabelBMFont::create(str-&gt;getCString(),&quot;level/prim30.fnt&quot;);</span>
+    <span class="c1">// label-&gt;setPosition(ccp(40, 45));</span>
+    <span class="c1">// sprite-&gt;addChild(label);</span>
+    <span class="c1">// // 这里可以再为 关卡精灵做些装饰，就像 lable 一样</span>
+    
+    <span class="c1">// 可以看到改动的地方不多，这样就把需要显示的精灵，包装成了可操作项</span>
+    <span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span> <span class="o">=</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+    <span class="n">touch</span><span class="o">-&gt;</span><span class="n">setDisplay</span><span class="p">(</span><span class="n">sprite</span><span class="p">);</span>
+	<span class="c1">// 可触摸项添加到可触摸项集合，关卡 level 作为 eventId 传递</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">addLsTouch</span><span class="p">(</span><span class="n">touch</span><span class="p">,</span> <span class="n">level</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="n">touch</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 在触摸函数里面添加，发送触摸消息，只需要添加一句话</span>
+<span class="kt">bool</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">ccTouchBegan</span><span class="p">(</span><span class="n">cocos2d</span><span class="o">::</span><span class="n">CCTouch</span> <span class="o">*</span><span class="n">pTouch</span><span class="p">,</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">){</span>
+	<span class="c1">// CCLog(&quot;touch begin.&quot;);</span>
+    <span class="c1">// m_touchPoint = CCDirector::sharedDirector()-&gt;convertToGL(pTouch-&gt;getLocationInView());</span>
+    <span class="c1">// m_touchOffset = getScrollView()-&gt;getContentOffset();</span>
+	
+    <span class="c1">// 发送触摸消息，并会在 touEventAction 自动相应， 如果触摸到元素</span>
+    <span class="n">sendTouchMessage</span><span class="p">(</span><span class="n">pTouch</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 这里也是同样</span>
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">ccTouchEnded</span><span class="p">(</span><span class="n">cocos2d</span><span class="o">::</span><span class="n">CCTouch</span> <span class="o">*</span><span class="n">pTouch</span><span class="p">,</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">){</span>
+    <span class="c1">// CCPoint endPoint = CCDirector::sharedDirector()-&gt;convertToGL(pTouch-&gt;getLocationInView());</span>
+    <span class="c1">// float distance = endPoint.x - m_touchPoint.x;</span>
+    <span class="c1">// float distanceY = endPoint.y - m_touchPoint.y;</span>
+    <span class="c1">//if (fabs(distance) &lt; 3 &amp;&amp; fabs(distanceY) &lt; 3){</span>
+        <span class="c1">// 小于三，不做拖动操作，也排除了（抖动误操作）,第二个参数，事件类型 1： touch end， 由 touchEventAction 自动响应</span>
+        <span class="n">sendTouchMessage</span><span class="p">(</span><span class="n">pTouch</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+	<span class="c1">//</span>
+    <span class="c1">//}else if (fabs(distance) &gt; 50){</span>
+    <span class="c1">//    // 大于 50，执行拖动效果</span>
+    <span class="c1">//    adjustScrollView(distance);</span>
+    <span class="c1">//}else{</span>
+    <span class="c1">//    // 回退为拖动之前的位置</span>
+    <span class="c1">//    adjustScrollView(0);</span>
+    <span class="c1">//}</span>
+
+	<span class="c1">// 无论如何，触摸结束，类型为 2</span>
+    <span class="n">sendTouchMessage</span><span class="p">(</span><span class="n">pTouch</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>

@@ -1,0 +1,58 @@
+<div class="highlight"><pre><span class="c1">// 场景基层定义，实现 LsTouchEvent 的 touchEventAction 事件响应方法即可</span>
+<span class="k">class</span> <span class="nc">TouchEventTest</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCLayer</span> <span class="p">,</span> <span class="k">public</span> <span class="n">LsTouchEvent</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">TouchEventTest</span><span class="p">)</span>
+	<span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">();</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ccTouchesBegan</span><span class="p">(</span><span class="n">CCSet</span> <span class="o">*</span><span class="n">pTouches</span><span class="p">,</span> <span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">);</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">touchEventAction</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="c1">// TouchEventTest 实现</span>
+<span class="kt">bool</span> <span class="n">TouchEventTest</span><span class="o">::</span><span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bRef</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+	<span class="k">do</span> <span class="p">{</span>
+		<span class="n">CC_BREAK_IF</span><span class="p">(</span><span class="o">!</span><span class="n">CCLayer</span><span class="o">::</span><span class="n">init</span><span class="p">());</span>
+
+		<span class="c1">// 启用触摸</span>
+		<span class="n">setTouchEnabled</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+		<span class="n">CCSize</span> <span class="n">winSize</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getWinSize</span><span class="p">();</span>
+		<span class="n">CCPoint</span> <span class="n">center</span> <span class="o">=</span> <span class="n">ccp</span><span class="p">(</span><span class="n">winSize</span><span class="p">.</span><span class="n">width</span><span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">winSize</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+
+		<span class="c1">// 创建可触摸精灵</span>
+		<span class="n">LsTouch</span><span class="o">*</span> <span class="n">lt</span> <span class="o">=</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+		<span class="c1">// 设置位置</span>
+		<span class="n">lt</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">center</span><span class="p">);</span>
+		<span class="c1">// 设置显示精灵</span>
+		<span class="n">lt</span><span class="o">-&gt;</span><span class="n">setDisplay</span><span class="p">(</span><span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Peas.png&quot;</span><span class="p">));</span>
+		<span class="c1">// 添加到显示</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">lt</span><span class="p">);</span>
+		<span class="c1">// 添加到触摸管理，第二个参数，事件 Id</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">addLsTouch</span><span class="p">(</span><span class="n">lt</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+
+		<span class="n">LsTouch</span><span class="o">*</span> <span class="n">lt2</span> <span class="o">=</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+		<span class="n">lt2</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccpAdd</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">ccp</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">)));</span>
+		<span class="n">lt2</span><span class="o">-&gt;</span><span class="n">setDisplay</span><span class="p">(</span><span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Peas.png&quot;</span><span class="p">));</span>
+		<span class="n">addChild</span><span class="p">(</span><span class="n">lt2</span><span class="p">);</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">addLsTouch</span><span class="p">(</span><span class="n">lt2</span><span class="p">,</span> <span class="mi">101</span><span class="p">);</span>
+
+		<span class="n">bRef</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">bRef</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">TouchEventTest</span><span class="o">::</span><span class="n">ccTouchesBegan</span><span class="p">(</span><span class="n">CCSet</span> <span class="o">*</span><span class="n">pTouches</span><span class="p">,</span> <span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">CCSetIterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">pTouches</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span>
+	<span class="n">CCTouch</span><span class="o">*</span> <span class="n">touch</span> <span class="o">=</span> <span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+	<span class="c1">// 发送触摸消息，并在 touchEventAction 自动回调相应的事件</span>
+	<span class="n">sendTouchMessage</span><span class="p">(</span><span class="n">touch</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">TouchEventTest</span><span class="o">::</span><span class="n">touchEventAction</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;touch event action id: %d&quot;</span><span class="p">,</span> <span class="n">touch</span><span class="o">-&gt;</span><span class="n">getEventId</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>

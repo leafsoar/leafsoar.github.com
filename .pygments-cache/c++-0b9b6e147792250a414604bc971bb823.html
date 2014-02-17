@@ -1,0 +1,43 @@
+<div class="highlight"><pre><span class="cp">#include &quot;cocos2d.h&quot;</span>
+<span class="cp">#include &quot;AppDelegate.h&quot;</span>
+<span class="cp">#include &quot;platform/android/jni/JniHelper.h&quot;</span>
+<span class="cp">#include &lt;jni.h&gt;</span>
+<span class="cp">#include &lt;android/log.h&gt;</span>
+
+<span class="cp">#define  LOG_TAG    &quot;main&quot;</span>
+<span class="cp">#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cocos2d</span><span class="p">;</span>
+
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span>
+<span class="p">{</span>
+
+<span class="n">jint</span> <span class="n">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">JniHelper</span><span class="o">::</span><span class="n">setJavaVM</span><span class="p">(</span><span class="n">vm</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">JNI_VERSION_1_4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span>  <span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jint</span> <span class="n">w</span><span class="p">,</span> <span class="n">jint</span> <span class="n">h</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOpenGLView</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">CCEGLView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">();</span>
+        <span class="n">view</span><span class="o">-&gt;</span><span class="n">setFrameSize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">);</span>
+
+        <span class="n">AppDelegate</span> <span class="o">*</span><span class="n">pAppDelegate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AppDelegate</span><span class="p">();</span>
+        <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">ccDrawInit</span><span class="p">();</span>
+        <span class="n">ccGLInvalidateStateCache</span><span class="p">();</span>
+        
+        <span class="n">CCShaderCache</span><span class="o">::</span><span class="n">sharedShaderCache</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">reloadDefaultShaders</span><span class="p">();</span>
+        <span class="n">CCTextureCache</span><span class="o">::</span><span class="n">reloadAllTextures</span><span class="p">();</span>
+        <span class="n">CCNotificationCenter</span><span class="o">::</span><span class="n">sharedNotificationCenter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">postNotification</span><span class="p">(</span><span class="n">EVNET_COME_TO_FOREGROUND</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+        <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setGLDefaultValues</span><span class="p">();</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

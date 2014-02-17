@@ -1,0 +1,57 @@
+<div class="highlight"><pre><span class="c1">// 初始化一个对象</span>
+<span class="k">static</span> <span class="n">CCObject</span><span class="o">*</span> <span class="n">create</span><span class="p">()</span> 
+<span class="p">{</span>
+	<span class="c1">// new CCObject 对象</span>
+	<span class="n">CCObject</span> <span class="o">*</span><span class="n">pRet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCObject</span><span class="p">();</span> 
+    <span class="k">if</span> <span class="p">(</span><span class="n">pRet</span> <span class="o">&amp;&amp;</span> <span class="n">pRet</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">())</span> 
+    <span class="p">{</span>
+		<span class="c1">// 添加到自动释放池</span>
+        <span class="n">pRet</span><span class="o">-&gt;</span><span class="n">autorelease</span><span class="p">();</span> 
+        <span class="k">return</span> <span class="n">pRet</span><span class="p">;</span> 
+    <span class="p">}</span> 
+    <span class="k">else</span> 
+    <span class="p">{</span> 
+        <span class="k">delete</span> <span class="n">pRet</span><span class="p">;</span> 
+        <span class="n">pRet</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> 
+    <span class="p">}</span> 
+<span class="p">}</span>
+
+<span class="c1">// 我们看到初始化的对象 自引用 m_uReference = 1</span>
+<span class="n">CCObject</span><span class="o">::</span><span class="n">CCObject</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="o">:</span><span class="n">m_uAutoReleaseCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">,</span><span class="n">m_uReference</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// when the object is created, the reference count of it is 1</span>
+<span class="p">,</span><span class="n">m_nLuaID</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">uObjectCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">m_uID</span> <span class="o">=</span> <span class="o">++</span><span class="n">uObjectCount</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 标记为自动释放对象</span>
+<span class="n">CCObject</span><span class="o">*</span> <span class="n">CCObject</span><span class="o">::</span><span class="n">autorelease</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 添加到自动释放池</span>
+    <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">sharedPoolManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">addObject</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 继续跟踪</span>
+<span class="kt">void</span> <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">addObject</span><span class="p">(</span><span class="n">CCObject</span><span class="o">*</span> <span class="n">pObject</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">getCurReleasePool</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">addObject</span><span class="p">(</span><span class="n">pObject</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 添加到自动释放池的实际操作</span>
+<span class="kt">void</span> <span class="n">CCAutoreleasePool</span><span class="o">::</span><span class="n">addObject</span><span class="p">(</span><span class="n">CCObject</span><span class="o">*</span> <span class="n">pObject</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 内部是由一个 CCArray 维护自动释放对象，并且此操作 会使引用 + 1</span>
+    <span class="n">m_pManagedObjectArray</span><span class="o">-&gt;</span><span class="n">addObject</span><span class="p">(</span><span class="n">pObject</span><span class="p">);</span>
+
+	<span class="c1">// 由于初始化 引用为 1，上面又有操作，所以引用至少为 2 （可能还被其它所引用）</span>
+    <span class="n">CCAssert</span><span class="p">(</span><span class="n">pObject</span><span class="o">-&gt;</span><span class="n">m_uReference</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;reference count should be greater than 1&quot;</span><span class="p">);</span>
+    <span class="o">++</span><span class="p">(</span><span class="n">pObject</span><span class="o">-&gt;</span><span class="n">m_uAutoReleaseCount</span><span class="p">);</span>
+	<span class="c1">// 变相的将自身引用转化为释放池引用，所以减 1</span>
+    <span class="n">pObject</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span> <span class="c1">// no ref count, in this case autorelease pool added.</span>
+<span class="p">}</span>
+</pre></div>

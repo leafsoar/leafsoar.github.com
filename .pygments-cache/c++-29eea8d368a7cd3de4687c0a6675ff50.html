@@ -1,0 +1,10 @@
+<div class="highlight"><pre><span class="c1">//  定义可以加 &quot;__&quot; 双下划，以告诉自己这是可持有属性</span>
+<span class="n">CC_SYNTHESIZE_RETAIN</span><span class="p">(</span><span class="n">LUser</span><span class="o">*</span><span class="p">,</span> <span class="n">__m_pLUser</span><span class="p">,</span> <span class="n">LUser</span><span class="p">);</span>
+
+<span class="c1">// 构造函数直接使用 __m_pLUser(0)</span>
+
+<span class="c1">// 析构函数调用如下</span>
+<span class="n">CC_SAFE_RELEASE_NULL</span><span class="p">(</span><span class="n">__m_pLUser</span><span class="p">);</span>
+
+<span class="c1">// 如此倒也省事，事省 : P</span>
+</pre></div>

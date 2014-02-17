@@ -1,0 +1,32 @@
+<div class="highlight"><pre><span class="c1">// 这里先简单实现思路</span>
+
+<span class="n">CCScene</span><span class="o">*</span> <span class="n">HelloWorld</span><span class="o">::</span><span class="n">scene</span><span class="p">()</span> <span class="p">{</span>
+
+	<span class="n">CCScene</span> <span class="o">*</span><span class="n">scene</span> <span class="o">=</span> <span class="n">CCScene</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="c1">// 创建背景层</span>
+	<span class="n">CCLayer</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="n">CCLayer</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="n">scene</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+
+	<span class="c1">// 添加背景图片和设置位置，可以使用其它装饰，或者小图片屏幕都行</span>
+	<span class="n">CCSize</span> <span class="n">size</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getWinSize</span><span class="p">();</span>
+	<span class="n">CCPoint</span> <span class="n">center</span> <span class="o">=</span> <span class="n">ccp</span><span class="p">(</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+	<span class="n">CCSprite</span><span class="o">*</span> <span class="n">pb</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Back.jpg&quot;</span><span class="p">);</span>
+	<span class="n">pb</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">center</span><span class="p">);</span>
+	<span class="n">b</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">pb</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+	<span class="c1">// 创建 LsLayer 层</span>
+	<span class="n">HelloWorld</span> <span class="o">*</span><span class="n">lsLayer</span> <span class="o">=</span> <span class="n">HelloWorld</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="n">scene</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">lsLayer</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">scene</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 在 HelloWorld 中重写 visit() 函数 设定显示区域</span>
+<span class="kt">void</span> <span class="n">HelloWorld</span><span class="o">::</span><span class="n">visit</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">glEnable</span><span class="p">(</span><span class="n">GL_SCISSOR_TEST</span><span class="p">);</span>              <span class="c1">// 开启显示指定区域</span>
+	<span class="c1">// 在这里只写上固定值，在特性环境下，以便快速看效果，实际的值，需要根据实际情况算得</span>
+	<span class="n">glScissor</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="mi">320</span><span class="p">);</span>     <span class="c1">// 只显示当前窗口的区域</span>
+	<span class="n">CCLayer</span><span class="o">::</span><span class="n">visit</span><span class="p">();</span>                       <span class="c1">// 调用下面的方法</span>
+	<span class="n">glDisable</span><span class="p">(</span><span class="n">GL_SCISSOR_TEST</span><span class="p">);</span>             <span class="c1">// 禁用</span>
+<span class="p">}</span>
+</pre></div>

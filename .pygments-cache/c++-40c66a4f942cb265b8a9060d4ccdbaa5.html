@@ -1,0 +1,177 @@
+<div class="highlight"><pre><span class="c1">// LSLog.h</span>
+
+<span class="cp">#ifndef LSLOG_H_</span>
+<span class="cp">#define LSLOG_H_</span>
+
+<span class="cp">#include &quot;cocos2d.h&quot;</span>
+
+<span class="c1">// 日志级别，也可根据自己需要修改添加类别</span>
+<span class="k">enum</span><span class="p">{</span>
+	<span class="n">LSLOG_VERBOSE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+	<span class="n">LSLOG_DEBUG</span><span class="p">,</span>
+	<span class="n">LSLOG_INFO</span><span class="p">,</span>
+	<span class="n">LSLOG_WARN</span><span class="p">,</span>
+	<span class="n">LSLOG_ERROR</span><span class="p">,</span>
+	<span class="n">LSLOG_COUNT</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="c1">// 打印日志类别前缀</span>
+<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lsLog_name</span><span class="p">[</span><span class="n">LSLOG_COUNT</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s">&quot;(verbose)</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="s">&quot;(debug)</span><span class="se">\t\t</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="s">&quot;(info)</span><span class="se">\t\t</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="s">&quot;(warn)</span><span class="se">\t\t</span><span class="s">&quot;</span><span class="p">,</span>
+		<span class="s">&quot;(error)</span><span class="se">\t\t</span><span class="s">&quot;</span>
+<span class="p">};</span>
+
+<span class="c1">// 不同级别对应的 Android Jni 实现方法名称</span>
+<span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lsLog_androidMethod</span><span class="p">[</span><span class="n">LSLOG_COUNT</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s">&quot;v&quot;</span><span class="p">,</span>
+		<span class="s">&quot;d&quot;</span><span class="p">,</span>
+		<span class="s">&quot;i&quot;</span><span class="p">,</span>
+		<span class="s">&quot;w&quot;</span><span class="p">,</span>
+		<span class="s">&quot;e&quot;</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> @brief 自定义日志系统，前期使用，以后可以扩展优化</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">LSLog</span><span class="o">:</span> <span class="k">public</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCObject</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">/// verbose 详细日志，一般常用的打印信息</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">verbose</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...);</span>
+	<span class="c1">/// debug 调试 ,调试过程所注意的信息</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">debug</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...);</span>
+	<span class="c1">/// info 一般信息,</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">info</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...);</span>
+	<span class="c1">///  warn 警告信息</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">warn</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...);</span>
+	<span class="c1">/// error 错误信息</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">error</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...);</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// 需要显示的日志级别定义</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">LOG_VALUE</span><span class="p">;</span>
+	<span class="c1">// 打印日志方法</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">printLog</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">format</span><span class="p">,</span> <span class="n">va_list</span> <span class="n">ap</span><span class="p">);</span>
+	<span class="c1">// Android 平台日志打印</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">printAndroidLog</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">methodName</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">log</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="cp">#endif </span><span class="cm">/* LSLOG_H_ */</span><span class="cp"></span>
+
+<span class="c1">// LSLog.cpp</span>
+
+<span class="cp">#include &quot;LSLog.h&quot;</span>
+
+<span class="cp">#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)</span>
+
+<span class="cp">#include &quot;platform/android/jni/JniHelper.h&quot;</span>
+<span class="cp">#include &quot;platform/android/jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h&quot;</span>
+<span class="cp">#include &lt;jni.h&gt;</span>
+
+<span class="cp">#endif</span>
+
+<span class="n">USING_NS_CC</span><span class="p">;</span>
+
+<span class="cp">#define kMaxStringLen (1024*100)</span>
+<span class="cp">#define LOG_V 1</span>
+<span class="cp">#define LOG_D 2</span>
+<span class="cp">#define LOG_I 4</span>
+<span class="cp">#define LOG_W 8</span>
+<span class="cp">#define LOG_E 16</span>
+
+<span class="c1">/// 需要打印的日志级别，根据 LOG_VALUE 的设置打印不同级别的日志</span>
+<span class="c1">//const int LSLog::LOG_VALUE = LOG_V | LOG_D | LOG_I | LOG_W | LOG_E;</span>
+<span class="c1">//const int LSLog::LOG_VALUE = LOG_D | LOG_I | LOG_W | LOG_E;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">LOG_VALUE</span> <span class="o">=</span> <span class="n">LOG_I</span> <span class="o">|</span> <span class="n">LOG_W</span> <span class="o">|</span> <span class="n">LOG_E</span><span class="p">;</span>
+<span class="c1">//const int LSLog::LOG_VALUE = LOG_W | LOG_E;</span>
+<span class="c1">//const int LSLog::LOG_VALUE = LOG_E;</span>
+<span class="c1">//const int LSLog::LOG_VALUE = 0;</span>
+
+<span class="c1">// 这里灵活控制，可以只打印某一个级别</span>
+<span class="c1">//const int LSLog::LOG_VALUE = LOG_D;</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">verbose</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">LOG_V</span> <span class="o">&amp;</span> <span class="n">LOG_VALUE</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">va_list</span> <span class="n">ap</span><span class="p">;</span>
+		<span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">);</span>
+		<span class="n">LSLog</span><span class="o">::</span><span class="n">printLog</span><span class="p">(</span><span class="n">LSLOG_VERBOSE</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+		<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">debug</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">LOG_D</span> <span class="o">&amp;</span> <span class="n">LOG_VALUE</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">va_list</span> <span class="n">ap</span><span class="p">;</span>
+		<span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">);</span>
+		<span class="n">LSLog</span><span class="o">::</span><span class="n">printLog</span><span class="p">(</span><span class="n">LSLOG_DEBUG</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+		<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">info</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">LOG_I</span> <span class="o">&amp;</span> <span class="n">LOG_VALUE</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">va_list</span> <span class="n">ap</span><span class="p">;</span>
+		<span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">);</span>
+		<span class="n">LSLog</span><span class="o">::</span><span class="n">printLog</span><span class="p">(</span><span class="n">LSLOG_INFO</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+		<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">warn</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">LOG_W</span> <span class="o">&amp;</span> <span class="n">LOG_VALUE</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">va_list</span> <span class="n">ap</span><span class="p">;</span>
+		<span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">);</span>
+		<span class="n">LSLog</span><span class="o">::</span><span class="n">printLog</span><span class="p">(</span><span class="n">LSLOG_WARN</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+		<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">error</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">LOG_E</span> <span class="o">&amp;</span> <span class="n">LOG_VALUE</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">va_list</span> <span class="n">ap</span><span class="p">;</span>
+		<span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">);</span>
+		<span class="n">LSLog</span><span class="o">::</span><span class="n">printLog</span><span class="p">(</span><span class="n">LSLOG_ERROR</span><span class="p">,</span> <span class="n">pszFormat</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+		<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">printLog</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">format</span><span class="p">,</span> <span class="n">va_list</span> <span class="n">ap</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">char</span><span class="o">*</span> <span class="n">pBuf</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">kMaxStringLen</span><span class="p">);</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">mstr</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">pBuf</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">vsnprintf</span><span class="p">(</span><span class="n">pBuf</span><span class="p">,</span> <span class="n">kMaxStringLen</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+		<span class="n">mstr</span> <span class="o">=</span> <span class="n">pBuf</span><span class="p">;</span>
+		<span class="n">free</span><span class="p">(</span><span class="n">pBuf</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="cp">#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)</span>
+	<span class="n">printAndroidLog</span><span class="p">(</span><span class="n">lsLog_androidMethod</span><span class="p">[</span><span class="n">type</span><span class="p">].</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">mstr</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="cp">#else</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;%s :%s&quot;</span><span class="p">,</span> <span class="n">lsLog_name</span><span class="p">[</span><span class="n">type</span><span class="p">].</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">mstr</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LSLog</span><span class="o">::</span><span class="n">printAndroidLog</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">methodName</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">log</span><span class="p">)</span> <span class="p">{</span>
+<span class="cp">#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)</span>
+	<span class="n">JniMethodInfo</span> <span class="n">t</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="n">isHave</span> <span class="o">=</span> <span class="n">JniHelper</span><span class="o">::</span><span class="n">getStaticMethodInfo</span><span class="p">(</span><span class="n">t</span><span class="p">,</span>
+			<span class="s">&quot;android/util/Log&quot;</span><span class="p">,</span>
+			<span class="n">methodName</span><span class="p">,</span>
+			<span class="s">&quot;(Ljava/lang/String;Ljava/lang/String;)I&quot;</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">isHave</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">jstring</span> <span class="n">jTitle</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="s">&quot;cocos2d-x&quot;</span><span class="p">);</span>
+		<span class="n">jstring</span> <span class="n">jMsg</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span>
+				<span class="n">log</span><span class="p">);</span>
+		<span class="n">t</span><span class="p">.</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">CallStaticVoidMethod</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">classID</span><span class="p">,</span> <span class="n">t</span><span class="p">.</span><span class="n">methodID</span><span class="p">,</span> <span class="n">jTitle</span><span class="p">,</span>
+				<span class="n">jMsg</span><span class="p">);</span>
+		<span class="n">t</span><span class="p">.</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">DeleteLocalRef</span><span class="p">(</span><span class="n">jTitle</span><span class="p">);</span>
+		<span class="n">t</span><span class="p">.</span><span class="n">env</span><span class="o">-&gt;</span><span class="n">DeleteLocalRef</span><span class="p">(</span><span class="n">jMsg</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;the jni method is not exits&quot;</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+</pre></div>

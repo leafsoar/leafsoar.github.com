@@ -1,0 +1,34 @@
+<div class="highlight"><pre><span class="c1">// 关键代码如下</span>
+<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;update index: %d&quot;</span><span class="p">,</span> <span class="n">updateCount</span><span class="p">);</span>
+
+<span class="c1">// 在不同的帧做相关操作，以便观察</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 创建一个自动管理对象</span>
+	<span class="n">layer</span> <span class="o">=</span> <span class="n">LSLayer</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="c1">// 创建一个新的自动释放池</span>
+	<span class="n">CCPoolManager</span><span class="o">::</span><span class="n">sharedPoolManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">push</span><span class="p">();</span>
+	<span class="c1">// 再创建一个自动管理对象</span>
+	<span class="n">sprite</span> <span class="o">=</span> <span class="n">LSSprite</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;update index: %d end&quot;</span><span class="p">,</span> <span class="n">updateCount</span><span class="p">);</span>
+
+<span class="c1">/// 打印代码如下</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span><span class="p">]</span>
+<span class="c1">// 第一帧创建了两个自动管理对象</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSLayer</span><span class="p">().()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSSprite</span><span class="p">().()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span> <span class="n">end</span><span class="p">]</span>
+<span class="c1">// 第一个过度帧只释放了 sprite 对象</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSSprite</span><span class="p">().</span><span class="o">~</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span> <span class="n">end</span><span class="p">]</span>
+<span class="c1">// 第二个过度帧释放了 layer 对象</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSLayer</span><span class="p">().</span><span class="o">~</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">3</span> <span class="n">end</span><span class="p">]</span>
+</pre></div>

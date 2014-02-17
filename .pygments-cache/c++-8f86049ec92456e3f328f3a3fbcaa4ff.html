@@ -1,0 +1,37 @@
+<div class="highlight"><pre><span class="c1">// AppDelegate.cpp 文件</span>
+
+<span class="n">AppDelegate</span><span class="o">::</span><span class="n">AppDelegate</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;AppDelegate()&quot;</span><span class="p">);</span>		<span class="c1">// AppDelegate 构造函数打印</span>
+<span class="p">}</span>
+
+<span class="n">AppDelegate</span><span class="o">::~</span><span class="n">AppDelegate</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;AppDelegate().~()&quot;</span><span class="p">);</span>		<span class="c1">// AppDelegate 析构函数打印</span>
+<span class="p">}</span>
+
+<span class="c1">// 程序入口</span>
+<span class="kt">bool</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">applicationDidFinishLaunching</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// initialize director</span>
+	<span class="n">CCDirector</span> <span class="o">*</span><span class="n">pDirector</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">();</span>
+	<span class="n">pDirector</span><span class="o">-&gt;</span><span class="n">setOpenGLView</span><span class="p">(</span><span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">());</span>
+
+	<span class="c1">// 初始化，资源适配，屏幕适配，运行第一个场景等代码</span>
+	<span class="p">...</span>
+	<span class="p">...</span>
+	<span class="p">...</span>
+	
+	<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">applicationDidEnterBackground</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pause</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AppDelegate</span><span class="o">::</span><span class="n">applicationWillEnterForeground</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">resume</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>

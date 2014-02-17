@@ -1,0 +1,22 @@
+<div class="highlight"><pre><span class="c1">// proj.linux/main.cpp  linux 平台手动指定画面大小</span>
+<span class="n">CCEGLView</span><span class="o">*</span> <span class="n">eglView</span> <span class="o">=</span> <span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">();</span>
+<span class="n">eglView</span><span class="o">-&gt;</span><span class="n">setFrameSize</span><span class="p">(</span><span class="mi">720</span><span class="p">,</span> <span class="mi">480</span><span class="p">);</span>
+
+<span class="c1">// proj.android/jni/hellocpp/main.cpp android 平台由 jni 调用传入设备分辨率参数</span>
+<span class="kt">void</span> <span class="n">Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span>  <span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jint</span> <span class="n">w</span><span class="p">,</span> <span class="n">jint</span> <span class="n">h</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOpenGLView</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">CCEGLView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">();</span>
+        <span class="n">view</span><span class="o">-&gt;</span><span class="n">setFrameSize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">);</span>
+
+        <span class="n">AppDelegate</span> <span class="o">*</span><span class="n">pAppDelegate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AppDelegate</span><span class="p">();</span>
+        <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">// other</span>
+		<span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

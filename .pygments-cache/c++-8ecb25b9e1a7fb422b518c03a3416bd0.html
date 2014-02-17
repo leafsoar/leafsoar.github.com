@@ -1,0 +1,115 @@
+<div class="highlight"><pre><span class="c1">// [cocos2dx-path]/cocos2dx/CCDirector.cpp</span>
+<span class="p">...</span>
+<span class="c1">// 定义静态变量，实现单例模式</span>
+<span class="k">static</span> <span class="n">CCDisplayLinkDirector</span> <span class="o">*</span><span class="n">s_SharedDirector</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="c1">// 返回 CCDirector 实例</span>
+<span class="n">CCDirector</span><span class="o">*</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 判断静态变量，以保证只有一个实例</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">s_SharedDirector</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">s_SharedDirector</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCDisplayLinkDirector</span><span class="p">();</span>
+        <span class="n">s_SharedDirector</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+    <span class="p">}</span>
+	<span class="c1">// CCDisplayLinkDirector 为 CCDirector 的子类，这里返回了其子类</span>
+    <span class="k">return</span> <span class="n">s_SharedDirector</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// mainLoop 方法的具体实现</span>
+<span class="kt">void</span> <span class="n">CCDisplayLinkDirector</span><span class="o">::</span><span class="n">mainLoop</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 此变量是我们需要关注，并且跟踪的，因为它决定着程序的结束时机</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">m_bPurgeDirecotorInNextLoop</span><span class="p">)</span>
+   <span class="p">{</span>
+       <span class="n">m_bPurgeDirecotorInNextLoop</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+	   <span class="c1">// 运行到此，说明程序的运行，已经没有逻辑代码需要处理了</span>
+       <span class="n">purgeDirector</span><span class="p">();</span>
+   <span class="p">}</span>
+   <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">m_bInvalid</span><span class="p">)</span>
+    <span class="p">{</span>
+		<span class="c1">// 屏幕绘制，并做一些相应的逻辑处理，其内部处理，这里暂且不做过多探讨</span>
+        <span class="n">drawScene</span><span class="p">();</span>
+    
+        <span class="c1">// 这里实现了 cocos2d-x CCObject 对象的内存管理机制，对此有兴趣者，可以深入下去</span>
+        <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">sharedPoolManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 弹出场景 CCScene</span>
+<span class="kt">void</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">popScene</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CCAssert</span><span class="p">(</span><span class="n">m_pRunningScene</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">,</span> <span class="s">&quot;running scene should not null&quot;</span><span class="p">);</span>
+
+    <span class="n">m_pobScenesStack</span><span class="o">-&gt;</span><span class="n">removeLastObject</span><span class="p">();</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="n">m_pobScenesStack</span><span class="o">-&gt;</span><span class="n">count</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+		<span class="c1">// 如果没有场景，调用 end() 方法</span>
+        <span class="n">end</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">m_bSendCleanupToScene</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="n">m_pNextScene</span> <span class="o">=</span> <span class="p">(</span><span class="n">CCScene</span><span class="o">*</span><span class="p">)</span><span class="n">m_pobScenesStack</span><span class="o">-&gt;</span><span class="n">objectAtIndex</span><span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">end</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// 在 end 方法中，设置了变量为 true，这所致的结果，在 mainLoop 函数中，达成了运行 purgeDirector 方法的条件</span>
+	<span class="n">m_bPurgeDirecotorInNextLoop</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 此方法做些收尾清理的工作</span>
+<span class="kt">void</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">purgeDirector</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="p">...</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_pRunningScene</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">m_pRunningScene</span><span class="o">-&gt;</span><span class="n">onExit</span><span class="p">();</span>
+        <span class="n">m_pRunningScene</span><span class="o">-&gt;</span><span class="n">cleanup</span><span class="p">();</span>
+        <span class="n">m_pRunningScene</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span>
+    <span class="p">}</span>
+	<span class="c1">// 做一些清理的工作</span>
+   <span class="p">...</span>
+    <span class="c1">// OpenGL view</span>
+
+	<span class="c1">// ###此句代码关键###</span>
+    <span class="n">m_pobOpenGLView</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span>
+    <span class="n">m_pobOpenGLView</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+    <span class="c1">// delete CCDirector</span>
+    <span class="n">release</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// 设置 openglview</span>
+<span class="kt">void</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">setOpenGLView</span><span class="p">(</span><span class="n">CCEGLView</span> <span class="o">*</span><span class="n">pobOpenGLView</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">CCAssert</span><span class="p">(</span><span class="n">pobOpenGLView</span><span class="p">,</span> <span class="s">&quot;opengl view should not be null&quot;</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_pobOpenGLView</span> <span class="o">!=</span> <span class="n">pobOpenGLView</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// EAGLView is not a CCObject</span>
+        <span class="k">delete</span> <span class="n">m_pobOpenGLView</span><span class="p">;</span> <span class="c1">// [openGLView_ release]</span>
+		<span class="c1">// 为当前 CCDirector m_pobOpenGLView  赋值</span>
+        <span class="n">m_pobOpenGLView</span> <span class="o">=</span> <span class="n">pobOpenGLView</span><span class="p">;</span>
+
+        <span class="c1">// set size</span>
+        <span class="n">m_obWinSizeInPoints</span> <span class="o">=</span> <span class="n">m_pobOpenGLView</span><span class="o">-&gt;</span><span class="n">getDesignResolutionSize</span><span class="p">();</span>
+        
+        <span class="n">createStatsLabel</span><span class="p">();</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_pobOpenGLView</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">setGLDefaultValues</span><span class="p">();</span>
+        <span class="p">}</span>  
+        
+        <span class="n">CHECK_GL_ERROR_DEBUG</span><span class="p">();</span>
+
+        <span class="n">m_pobOpenGLView</span><span class="o">-&gt;</span><span class="n">setTouchDelegate</span><span class="p">(</span><span class="n">m_pTouchDispatcher</span><span class="p">);</span>
+        <span class="n">m_pTouchDispatcher</span><span class="o">-&gt;</span><span class="n">setDispatchEvents</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

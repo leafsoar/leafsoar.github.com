@@ -1,0 +1,25 @@
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">touchEventAction</span><span class="p">(</span><span class="n">LsTouch</span> <span class="o">*</span><span class="n">touch</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">){</span>
+    <span class="c1">// type 事件类型，0：touchbegin 1：touchend 触发 2：touchend 未触发</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">touch</span><span class="p">)</span>
+        <span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;touch event action id: %d  type: %d&quot;</span><span class="p">,</span> <span class="n">touch</span><span class="o">-&gt;</span><span class="n">getEventId</span><span class="p">(),</span> <span class="n">type</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">selectTag</span> <span class="o">=</span> <span class="mi">10001</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">touch</span><span class="p">){</span>
+        <span class="n">getScrollView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">removeChildByTag</span><span class="p">(</span><span class="n">selectTag</span><span class="p">);</span>
+        <span class="c1">// 添加选撞状态的精灵，背景 高亮显示</span>
+        <span class="n">CCSprite</span><span class="o">*</span> <span class="n">sprite</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;level/sel.png&quot;</span><span class="p">);</span>
+        <span class="n">sprite</span><span class="o">-&gt;</span><span class="n">setScaleX</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="n">sprite</span><span class="o">-&gt;</span><span class="n">setScaleY</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="n">sprite</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">touch</span><span class="o">-&gt;</span><span class="n">getPosition</span><span class="p">());</span>
+		<span class="c1">// 这里使用了 zOrder = 1 以保证，高亮图片显示在 实际关卡图片后面</span>
+        <span class="n">getScrollView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">sprite</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">selectTag</span><span class="p">);</span>
+        
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">getScrollView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContainer</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">removeChildByTag</span><span class="p">(</span><span class="n">selectTag</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">touch</span><span class="p">){</span>
+        <span class="c1">// 收到 type 为 1 表示触发关卡选择</span>
+        <span class="n">CCString</span><span class="o">*</span> <span class="n">str</span> <span class="o">=</span> <span class="n">CCString</span><span class="o">::</span><span class="n">createWithFormat</span><span class="p">(</span><span class="s">&quot;您选择的关卡为 %d .&quot;</span><span class="p">,</span> <span class="n">touch</span><span class="o">-&gt;</span><span class="n">getEventId</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="n">CCMessageBox</span><span class="p">(</span><span class="s">&quot;关卡&quot;</span><span class="p">,</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">getCString</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

@@ -1,0 +1,53 @@
+<div class="highlight"><pre><span class="c1">// [cocos2dx-path]/cocos2dx/platform/linux/CCApplication.cpp</span>
+<span class="p">...</span>
+<span class="c1">// 此变量为定义了一个 CCApplication 的静态变量，也及时自己类型本身，实现单例模式</span>
+<span class="n">CCApplication</span> <span class="o">*</span> <span class="n">CCApplication</span><span class="o">::</span><span class="n">sm_pSharedApplication</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="c1">// 构造函数，将所创建的 对象直接付给其静态变量</span>
+<span class="n">CCApplication</span><span class="o">::</span><span class="n">CCApplication</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// 断言在此决定着此构造函数只能运行一次</span>
+	<span class="n">CC_ASSERT</span><span class="p">(</span><span class="o">!</span> <span class="n">sm_pSharedApplication</span><span class="p">);</span>
+	<span class="n">sm_pSharedApplication</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">CCApplication</span><span class="o">::~</span><span class="n">CCApplication</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">CC_ASSERT</span><span class="p">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">sm_pSharedApplication</span><span class="p">);</span>
+	<span class="n">sm_pSharedApplication</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">m_nAnimationInterval</span> <span class="o">=</span> <span class="mf">1.0f</span><span class="o">/</span><span class="mf">60.0f</span><span class="o">*</span><span class="mf">1000.0f</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// run 方法，整个 cocos2d-x 的主循环在这里开始</span>
+<span class="kt">int</span> <span class="n">CCApplication</span><span class="o">::</span><span class="n">run</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// 首次启动调用初始化函数</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">applicationDidFinishLaunching</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 游戏主循环，这里 Linux 的实现相比其它平台的实现，简单明了</span>
+	<span class="k">for</span> <span class="p">(;;)</span> <span class="p">{</span>
+		<span class="kt">long</span> <span class="n">iLastTime</span> <span class="o">=</span> <span class="n">getCurrentMillSecond</span><span class="p">();</span>
+		<span class="c1">// 在循环之内调用每一帧的逻辑，组织并且控制 cocos2d-x 之中各个组件</span>
+		<span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">mainLoop</span><span class="p">();</span>
+		<span class="kt">long</span> <span class="n">iCurTime</span> <span class="o">=</span> <span class="n">getCurrentMillSecond</span><span class="p">();</span>
+		<span class="c1">// 这里的几个时间变量，可以控制每一帧所运行的 最小 时间，从而控制游戏的帧率</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">iCurTime</span><span class="o">-</span><span class="n">iLastTime</span><span class="o">&lt;</span><span class="n">m_nAnimationInterval</span><span class="p">){</span>
+			<span class="n">usleep</span><span class="p">((</span><span class="n">m_nAnimationInterval</span> <span class="o">-</span> <span class="n">iCurTime</span><span class="o">+</span><span class="n">iLastTime</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+	<span class="c1">// 注意，这里的 for 循环，并没有退出循环条件，这也决定着 run() 方法永远也不会返回</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 方法直接返回了静态对象，并且做了断言，也既是在调用此方法之前，</span>
+<span class="c1">// 必须事先创建一个 CCApplication 的对象，以保证其静态变量能够初始化，否则返回空</span>
+<span class="n">CCApplication</span><span class="o">*</span> <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">CC_ASSERT</span><span class="p">(</span><span class="n">sm_pSharedApplication</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">sm_pSharedApplication</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

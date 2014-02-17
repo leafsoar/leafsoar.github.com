@@ -1,0 +1,57 @@
+<div class="highlight"><pre><span class="c1">// 释放池管理接口</span>
+<span class="k">class</span> <span class="nc">CC_DLL</span> <span class="n">CCPoolManager</span>
+<span class="p">{</span>
+	<span class="c1">// 释放池对象集合</span>
+    <span class="n">CCArray</span><span class="o">*</span>    <span class="n">m_pReleasePoolStack</span><span class="p">;</span>
+	<span class="c1">// 当前操作释放池</span>
+    <span class="n">CCAutoreleasePool</span><span class="o">*</span>                    <span class="n">m_pCurReleasePool</span><span class="p">;</span>
+
+	<span class="c1">// 获取当前释放池</span>
+    <span class="n">CCAutoreleasePool</span><span class="o">*</span> <span class="n">getCurReleasePool</span><span class="p">();</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">CCPoolManager</span><span class="p">();</span>
+    <span class="o">~</span><span class="n">CCPoolManager</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="n">finalize</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="n">push</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="n">pop</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="n">removeObject</span><span class="p">(</span><span class="n">CCObject</span><span class="o">*</span> <span class="n">pObject</span><span class="p">);</span>
+	<span class="c1">// 添加一个 创建时期 对象</span>
+    <span class="kt">void</span> <span class="n">addObject</span><span class="p">(</span><span class="n">CCObject</span><span class="o">*</span> <span class="n">pObject</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="n">CCPoolManager</span><span class="o">*</span> <span class="n">sharedPoolManager</span><span class="p">();</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">purgePoolManager</span><span class="p">();</span>
+
+    <span class="k">friend</span> <span class="k">class</span> <span class="nc">CCAutoreleasePool</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// 我们从 addObject 开始看起，由上文可以 addObject 是由 CCObject 的 autorelease 自动调用的</span>
+<span class="kt">void</span> <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">addObject</span><span class="p">(</span><span class="n">CCObject</span><span class="o">*</span> <span class="n">pObject</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">getCurReleasePool</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">addObject</span><span class="p">(</span><span class="n">pObject</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">CCAutoreleasePool</span><span class="o">*</span> <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">getCurReleasePool</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// 如果当前释放池为空</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">m_pCurReleasePool</span><span class="p">)</span>
+    <span class="p">{</span>
+		<span class="c1">// 添加一个</span>
+        <span class="n">push</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">CCAssert</span><span class="p">(</span><span class="n">m_pCurReleasePool</span><span class="p">,</span> <span class="s">&quot;current auto release pool should not be null&quot;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">m_pCurReleasePool</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">push</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">CCAutoreleasePool</span><span class="o">*</span> <span class="n">pPool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCAutoreleasePool</span><span class="p">();</span>       <span class="c1">//ref = 1</span>
+    <span class="n">m_pCurReleasePool</span> <span class="o">=</span> <span class="n">pPool</span><span class="p">;</span>
+	<span class="c1">// 像集合添加一个新的释放池</span>
+    <span class="n">m_pReleasePoolStack</span><span class="o">-&gt;</span><span class="n">addObject</span><span class="p">(</span><span class="n">pPool</span><span class="p">);</span>                   <span class="c1">//ref = 2</span>
+
+    <span class="n">pPool</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span>                                       <span class="c1">//ref = 1</span>
+<span class="p">}</span>
+</pre></div>

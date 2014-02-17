@@ -1,0 +1,26 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LUser</span><span class="o">:</span> <span class="k">public</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCObject</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">LUser</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">(){</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+	<span class="n">LUser</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LUser()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="o">~</span><span class="n">LUser</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LUser().~():%s&quot;</span><span class="p">,</span> <span class="n">m_sUserName</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+	<span class="p">};</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_sUserName</span><span class="p">;</span>		<span class="c1">// 用户名</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_sPassword</span><span class="p">;</span>		<span class="c1">// 用户密码</span>
+
+	<span class="c1">// 其它数据</span>
+	<span class="n">CCSprite</span><span class="o">*</span> <span class="n">m_pSprite</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// 那么我们的使用过程</span>
+<span class="n">LUser</span><span class="o">*</span> <span class="n">lu</span> <span class="o">=</span> <span class="n">LUser</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sSprite</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;a.png&quot;</span><span class="p">);</span>
+<span class="c1">// 如果这里不 retain  则以后就用不到了</span>
+<span class="n">lu</span><span class="o">-&gt;</span><span class="n">m_sSprite</span><span class="o">-&gt;</span><span class="n">retain</span><span class="p">();</span>
+</pre></div>

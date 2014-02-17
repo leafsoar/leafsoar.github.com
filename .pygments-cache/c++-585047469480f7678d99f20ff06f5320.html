@@ -1,0 +1,29 @@
+<div class="highlight"><pre><span class="c1">// 创建一个 CCScrollView, 内容大小和当前的界面一样</span>
+<span class="n">CCScrollView</span><span class="o">*</span> <span class="n">scrollView</span> <span class="o">=</span> <span class="n">CCScrollView</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">getContentSize</span><span class="p">());</span>
+<span class="c1">// 设定容器层，我们并不需要重新设置 scrollview 的 ContentSize，容器层内部设定即可</span>
+<span class="n">scrollView</span><span class="o">-&gt;</span><span class="n">setContainer</span><span class="p">(</span><span class="n">getContainLayer</span><span class="p">());</span>
+<span class="c1">// 关闭 scrollView 的可触摸操作</span>
+<span class="n">scrollView</span><span class="o">-&gt;</span><span class="n">setTouchEnabled</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+
+<span class="c1">// 容器层内容实现</span>
+<span class="n">CCLayer</span><span class="o">*</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">getContainLayer</span><span class="p">(){</span>
+    <span class="n">m_nPageCount</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    
+    <span class="n">CCSize</span> <span class="n">winSize</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getWinSize</span><span class="p">();</span>
+    <span class="n">CCPoint</span> <span class="n">pointCenter</span> <span class="o">=</span> <span class="n">ccp</span><span class="p">(</span><span class="n">winSize</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">winSize</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+    
+    <span class="n">CCLayer</span><span class="o">*</span> <span class="n">layer</span> <span class="o">=</span> <span class="n">CCLayer</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+    <span class="n">layer</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">CCPointZero</span><span class="p">);</span>
+    
+    <span class="c1">// 添加 frame，每 一页 用一张背景图显示</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m_nPageCount</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">CCSprite</span><span class="o">*</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;level/frame.png&quot;</span><span class="p">);</span>
+        <span class="n">frame</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccpAdd</span><span class="p">(</span><span class="n">pointCenter</span><span class="p">,</span> <span class="n">ccp</span><span class="p">(</span><span class="n">winSize</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)));</span>
+        <span class="n">layer</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="n">layer</span><span class="o">-&gt;</span><span class="n">setContentSize</span><span class="p">(</span><span class="n">CCSizeMake</span><span class="p">(</span><span class="n">winSize</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">m_nPageCount</span><span class="p">,</span> <span class="n">winSize</span><span class="p">.</span><span class="n">height</span><span class="p">));</span>
+    
+    <span class="k">return</span> <span class="n">layer</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

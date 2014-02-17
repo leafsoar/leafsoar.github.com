@@ -1,0 +1,34 @@
+<div class="highlight"><pre><span class="c1">// Linux 平台关键代码</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// 初始化等内容</span>
+	<span class="p">...</span>
+	<span class="p">...</span>
+	<span class="c1">// 创建 app 变量</span>
+    <span class="n">AppDelegate</span> <span class="n">app</span><span class="p">;</span>	
+	<span class="p">...</span>
+	<span class="p">...</span>
+	<span class="c1">// 执行 核心 run() 方法</span>
+    <span class="k">return</span> <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Android 平台关键代码</span>
+<span class="kt">void</span> <span class="n">Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span>  <span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">thiz</span><span class="p">,</span> <span class="n">jint</span> <span class="n">w</span><span class="p">,</span> <span class="n">jint</span> <span class="n">h</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOpenGLView</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">CCEGLView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">();</span>
+        <span class="n">view</span><span class="o">-&gt;</span><span class="n">setFrameSize</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">);</span>
+
+		<span class="c1">// 创建 AppDelegate 对象</span>
+        <span class="n">AppDelegate</span> <span class="o">*</span><span class="n">pAppDelegate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AppDelegate</span><span class="p">();</span>
+		<span class="c1">// 执行 核心 run() 方法</span>
+        <span class="n">CCApplication</span><span class="o">::</span><span class="n">sharedApplication</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">run</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+		<span class="p">...</span>
+		<span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>

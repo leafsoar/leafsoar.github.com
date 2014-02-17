@@ -1,0 +1,23 @@
+<div class="highlight"><pre><span class="n">CCSize</span> <span class="n">frameSize</span> <span class="o">=</span> <span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getFrameSize</span><span class="p">();</span>
+<span class="c1">// 设置 LsSize 固定值</span>
+<span class="n">CCSize</span> <span class="n">lsSize</span> <span class="o">=</span> <span class="n">CCSizeMake</span><span class="p">(</span><span class="mi">480</span><span class="p">,</span> <span class="mi">320</span><span class="p">);</span>
+
+<span class="kt">float</span> <span class="n">scaleX</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">frameSize</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="n">lsSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">scaleY</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">frameSize</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="n">lsSize</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+
+<span class="c1">// 定义 scale 变量</span>
+<span class="kt">float</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span> <span class="c1">// MAX(scaleX, scaleY);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">scaleX</span> <span class="o">&gt;</span> <span class="n">scaleY</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 如果是 X 方向偏大，那么 scaleX 需要除以一个放大系数，放大系数可以由枞方向获取，</span>
+    <span class="c1">// 因为此时 FrameSize 和 LsSize 的上下边是重叠的</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">scaleX</span> <span class="o">/</span> <span class="p">(</span><span class="n">frameSize</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">lsSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">scaleY</span> <span class="o">/</span> <span class="p">(</span><span class="n">frameSize</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">lsSize</span><span class="p">.</span><span class="n">width</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;x: %f; y: %f; scale: %f&quot;</span><span class="p">,</span> <span class="n">scaleX</span><span class="p">,</span> <span class="n">scaleY</span><span class="p">,</span> <span class="n">scale</span><span class="p">);</span>
+
+<span class="c1">// 根据 LsSize 和屏幕宽高比动态设定 WinSize</span>
+<span class="n">CCEGLView</span><span class="o">::</span><span class="n">sharedOpenGLView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setDesignResolutionSize</span><span class="p">(</span><span class="n">lsSize</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+    	<span class="n">lsSize</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">kResolutionNoBorder</span><span class="p">);</span>
+</pre></div>

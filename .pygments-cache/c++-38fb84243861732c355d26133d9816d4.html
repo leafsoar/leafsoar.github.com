@@ -1,0 +1,70 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">BaseLayer2</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCLayer</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;BaseLayer2().init()&quot;</span><span class="p">);</span>
+		<span class="c1">// 启用定时器，自动在每一帧调用 update 方法</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">scheduleUpdate</span><span class="p">();</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+
+	<span class="c1">// 定义 update 统计</span>
+	<span class="kt">int</span> <span class="n">updateCount</span><span class="p">;</span>
+	<span class="n">LSLayer</span><span class="o">*</span> <span class="n">layer</span><span class="p">;</span>
+	<span class="n">LSSprite</span><span class="o">*</span> <span class="n">sprite</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">update</span><span class="p">(</span><span class="kt">float</span> <span class="n">fDelta</span><span class="p">){</span>
+		<span class="c1">// 为了方便观察，不让 update 内部无止境的打印下去</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">){</span>
+			<span class="n">updateCount</span> <span class="o">++</span><span class="p">;</span>
+			<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;update index: %d&quot;</span><span class="p">,</span> <span class="n">updateCount</span><span class="p">);</span>
+
+			<span class="c1">// 在不同的帧做相关操作，以便观察</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+				<span class="n">layer</span> <span class="o">=</span> <span class="n">LSLayer</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+				<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">layer</span><span class="p">);</span>
+				<span class="n">sprite</span> <span class="o">=</span> <span class="n">LSSprite</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">2</span><span class="p">){</span>
+				<span class="k">this</span><span class="o">-&gt;</span><span class="n">removeChild</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+
+			<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">3</span><span class="p">){</span>
+
+			<span class="p">}</span>
+
+			<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;update index: %d end&quot;</span><span class="p">,</span> <span class="n">updateCount</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">};</span>
+
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">BaseLayer2</span><span class="p">);</span>
+
+	<span class="n">BaseLayer2</span><span class="p">()</span><span class="o">:</span>
+		<span class="n">updateCount</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+		<span class="n">layer</span><span class="p">(</span><span class="nb">NULL</span><span class="p">),</span>
+		<span class="n">sprite</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;BaseLayer2().()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="o">~</span><span class="n">BaseLayer2</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;BaseLayer2().~()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+<span class="p">};</span>
+
+<span class="c1">// 打印如下</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">BaseLayer2</span><span class="p">().()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">BaseLayer2</span><span class="p">().</span><span class="n">init</span><span class="p">()]</span>
+<span class="c1">// 第一帧创建两个对象</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSLayer</span><span class="p">().()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSLayer</span><span class="p">().</span><span class="n">init</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSSprite</span><span class="p">().()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSSprite</span><span class="p">().</span><span class="n">init</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span> <span class="n">end</span><span class="p">]</span>
+<span class="c1">// 我们看到 sprite 无用对象在 第一帧和第二帧之间被释放</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSSprite</span><span class="p">().</span><span class="o">~</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span><span class="p">]</span>
+<span class="c1">// 在第二帧移除管理对象，可以看到它是立即释放，在 index: 2 end 之前</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSLayer</span><span class="p">().</span><span class="o">~</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span> <span class="n">end</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">3</span> <span class="n">end</span><span class="p">]</span>
+</pre></div>

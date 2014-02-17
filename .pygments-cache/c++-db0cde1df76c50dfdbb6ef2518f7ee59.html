@@ -1,0 +1,57 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LSLayer</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCNode</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LSLayer().init()&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">LSLayer</span><span class="p">);</span>
+
+	<span class="n">LSLayer</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LSLayer().()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="o">~</span><span class="n">LSLayer</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LSLayer().~()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">LSSprite</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCNode</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LSSprite().init()&quot;</span><span class="p">);</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">LSSprite</span><span class="p">);</span>
+
+	<span class="n">LSSprite</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LSSprite().()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="o">~</span><span class="n">LSSprite</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LSSprite().~()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">BaseLayer</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCLayer</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;BaseLayer().init()&quot;</span><span class="p">);</span>
+		<span class="c1">// 我们创建了两个 “无用”对象</span>
+		<span class="n">LSLayer</span><span class="o">*</span> <span class="n">layer</span> <span class="o">=</span> <span class="n">LSLayer</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+		<span class="n">LSSprite</span><span class="o">*</span> <span class="n">sprite</span> <span class="o">=</span> <span class="n">LSSprite</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+		<span class="c1">// 使用了 layer 变为受“管理”的对象</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">layer</span><span class="p">);</span>
+
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">};</span>
+
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">BaseLayer</span><span class="p">);</span>
+
+	<span class="n">BaseLayer</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;BaseLayer().()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+	<span class="o">~</span><span class="n">BaseLayer</span><span class="p">(){</span>
+		<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;BaseLayer().~()&quot;</span><span class="p">);</span>
+	<span class="p">};</span>
+<span class="p">};</span>
+</pre></div>

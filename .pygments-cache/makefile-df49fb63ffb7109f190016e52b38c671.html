@@ -1,0 +1,95 @@
+<div class="highlight"><pre><span class="nv">CC</span>      <span class="o">=</span> gcc
+<span class="nv">CXX</span>     <span class="o">=</span> g++
+<span class="nv">TARGET</span>	<span class="o">=</span> HelloCpp
+<span class="nv">CCFLAGS</span> <span class="o">=</span> -Wall
+<span class="nv">CXXFLAGS</span> <span class="o">=</span> -Wall
+<span class="nv">VISIBILITY</span> <span class="o">=</span>
+ 
+<span class="nv">COCOS2DX_PATH</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx
+<span class="nv">INCLUDES</span> <span class="o">=</span>  -I../ <span class="se">\</span>
+			-I../Classes <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span> <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/libfreetype2 <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/cocoa <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/include <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/linux <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/glew-1.7.0/glew-1.7.0/include/ <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/kazmath/include <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/libxml2 <span class="se">\</span>
+			-I<span class="k">$(</span>COCOS2DX_PATH<span class="k">)</span>/platform/third_party/linux/libjpeg  <span class="se">\</span>
+
+
+<span class="nv">DEFINES</span> <span class="o">=</span> -DLINUX
+
+<span class="nv">OBJECTS</span> <span class="o">=</span> ./main.o <span class="se">\</span>
+        ../Classes/AppDelegate.o <span class="se">\</span>
+        ../Classes/HelloWorldScene.o 
+
+<span class="nv">LBITS</span> <span class="o">:=</span> <span class="k">$(</span>shell getconf LONG_BIT<span class="k">)</span>
+<span class="cp">ifeq ($(LBITS),64)</span>
+<span class="nv">STATICLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/libraries/lib64
+<span class="cp">else</span>
+<span class="nv">STATICLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/libraries
+<span class="cp">endif</span>
+<span class="nv">STATICLIBS</span> <span class="o">=</span> 
+<span class="nv">STATICLIBS</span> <span class="o">=</span> <span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libfreetype.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libxml2.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libpng.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libjpeg.a <span class="se">\</span>
+				<span class="k">$(</span>STATICLIBS_DIR<span class="k">)</span>/libtiff.a <span class="se">\</span>
+<span class="c">#				$(STATICLIBS_DIR)/libGLEW.a \</span>
+
+<span class="nv">SHAREDLIBS</span> <span class="o">=</span> 
+<span class="cp">ifeq ($(LBITS),64)</span>
+<span class="nv">SHAREDLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/CocosDenshion/third_party/fmod/lib64/api/lib
+<span class="nv">SHAREDLIBS</span> <span class="o">=</span> -L<span class="k">$(</span>SHAREDLIBS_DIR<span class="k">)</span> -lfmodex64
+<span class="cp">else</span>
+<span class="nv">SHAREDLIBS_DIR</span> <span class="o">=</span> <span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/CocosDenshion/third_party/fmod/api/lib
+<span class="nv">SHAREDLIBS</span> <span class="o">=</span> -L<span class="k">$(</span>SHAREDLIBS_DIR<span class="k">)</span> -lfmodex
+<span class="cp">endif</span>
+
+<span class="nv">SHAREDLIBS</span> <span class="o">+=</span> -lglfw -lGL
+<span class="c">#SHAREDLIBS += -L../../../lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion -Wl,-rpath,../../../../lib/linux/Debug/ </span>
+<span class="nv">SHAREDLIBS</span> <span class="o">+=</span> -Wl,-rpath,<span class="k">$(</span>SHAREDLIBS_DIR<span class="k">)</span>
+<span class="c">#SHAREDLIBS += -Wl,-rpath,../../../../cocos2dx/platform/third_party/linux/glew-1.7.0/glew-1.7.0/lib</span>
+<span class="nv">SHAREDLIBS</span> <span class="o">+=</span> -L<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/glew-1.7.0/glew-1.7.0/lib -lGLEW
+<span class="nv">SHAREDLIBS</span> <span class="o">+=</span> -Wl,-rpath,<span class="k">$(</span>COCOS2DX_ROOT<span class="k">)</span>/cocos2dx/platform/third_party/linux/glew-1.7.0/glew-1.7.0/lib
+
+<span class="c">#$(shell ../../build-linux.sh $&lt;)</span>
+
+<span class="nv">BIN_DIR_ROOT</span><span class="o">=</span>bin
+<span class="nv">BIN_DIR</span> <span class="o">=</span> <span class="k">$(</span>BIN_DIR_ROOT<span class="k">)</span>
+
+<span class="nf">debug</span><span class="o">:</span> <span class="m">BIN_DIR = $(BIN_DIR_ROOT)/debug</span>
+<span class="nf">debug</span><span class="o">:</span> <span class="m">CCFLAGS += -g3 -O0</span>
+<span class="nf">debug</span><span class="o">:</span> <span class="m">CXXFLAGS += -g3 -O0</span>
+<span class="nf">debug</span><span class="o">:</span> <span class="m">SHAREDLIBS += -L$(COCOS2DX_ROOT)/lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion</span>
+<span class="nf">debug</span><span class="o">:</span> <span class="m">SHAREDLIBS += -Wl</span><span class="p">,</span><span class="m">-rpath</span><span class="p">,</span><span class="m">$(COCOS2DX_ROOT)/lib/linux/Debug/</span>
+<span class="nf">debug</span><span class="o">:</span> <span class="m">DEFINES += -DDEBUG</span>
+<span class="nf">debug</span><span class="o">:</span> <span class="m">$(TARGET)</span>
+
+<span class="nf">release</span><span class="o">:</span> <span class="m">BIN_DIR = $(BIN_DIR_ROOT)/release</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">CCFLAGS += -O3</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">CXXFLAGS += -O3</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">SHAREDLIBS += -L$(COCOS2DX_ROOT)/lib/linux/Release -lcocos2d -lrt -lz -lcocosdenshion</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">SHAREDLIBS += -Wl</span><span class="p">,</span><span class="m">-rpath</span><span class="p">,</span><span class="m">$(COCOS2DX_ROOT)/lib/linux/Release/</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">DEFINES += -DNDEBUG</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">$(TARGET)</span>
+
+<span class="c">####### Build rules</span>
+<span class="k">$(</span>TARGET<span class="k">)</span>: <span class="k">$(</span>OBJECTS<span class="k">)</span> 
+	mkdir -p <span class="k">$(</span>BIN_DIR<span class="k">)</span>
+	<span class="k">$(</span>CXX<span class="k">)</span> <span class="k">$(</span>CXXFLAGS<span class="k">)</span> <span class="k">$(</span>INCLUDES<span class="k">)</span> <span class="k">$(</span>DEFINES<span class="k">)</span> <span class="k">$(</span>OBJECTS<span class="k">)</span> -o <span class="k">$(</span>BIN_DIR<span class="k">)</span>/<span class="k">$(</span>TARGET<span class="k">)</span> <span class="k">$(</span>SHAREDLIBS<span class="k">)</span> <span class="k">$(</span>STATICLIBS<span class="k">)</span>
+
+<span class="c">####### Compile</span>
+%.o: %.cpp
+	<span class="k">$(</span>CXX<span class="k">)</span> <span class="k">$(</span>CXXFLAGS<span class="k">)</span> <span class="k">$(</span>INCLUDES<span class="k">)</span> <span class="k">$(</span>DEFINES<span class="k">)</span> <span class="k">$(</span>VISIBILITY<span class="k">)</span> -c <span class="nv">$&lt;</span> -o <span class="nv">$@</span>
+
+%.o: %.c
+	<span class="k">$(</span>CC<span class="k">)</span> <span class="k">$(</span>CCFLAGS<span class="k">)</span> <span class="k">$(</span>INCLUDES<span class="k">)</span> <span class="k">$(</span>DEFINES<span class="k">)</span> <span class="k">$(</span>VISIBILITY<span class="k">)</span> -c <span class="nv">$&lt;</span> -o <span class="nv">$@</span>
+
+clean: 
+	rm -f <span class="k">$(</span>OBJECTS<span class="k">)</span> <span class="k">$(</span>TARGET<span class="k">)</span> core
+</pre></div>

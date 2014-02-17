@@ -1,0 +1,18 @@
+<div class="highlight"><pre><span class="c1">// 在不同的帧做相关操作，以便观察</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">1</span><span class="p">){</span>
+	<span class="n">layer</span> <span class="o">=</span> <span class="n">LSLayer</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="n">sprite</span> <span class="o">=</span> <span class="n">LSSprite</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="n">layer</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">sprite</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">2</span><span class="p">){</span>
+	<span class="k">this</span><span class="o">-&gt;</span><span class="n">removeChild</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">updateCount</span> <span class="o">==</span> <span class="mi">3</span><span class="p">){</span>
+
+<span class="p">}</span>
+
+<span class="c1">/// 打印如下</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">1</span> <span class="n">end</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSLayer</span><span class="p">().</span><span class="o">~</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">LSSprite</span><span class="p">().</span><span class="o">~</span><span class="p">()]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">cocos2d</span><span class="o">-</span><span class="n">x</span> <span class="n">debug</span> <span class="n">info</span> <span class="p">[</span><span class="n">update</span> <span class="nl">index:</span> <span class="mi">2</span> <span class="n">end</span><span class="p">]</span>
+</pre></div>

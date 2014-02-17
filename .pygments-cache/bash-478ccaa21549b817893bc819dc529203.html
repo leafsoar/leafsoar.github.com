@@ -1,0 +1,11 @@
+<div class="highlight"><pre>// 由 addChild<span class="o">(</span>BaseLayer::create<span class="o">())</span>; 方法开始，创建并初始化了 BaseLayer 层
+cocos2d-x debug info <span class="o">[</span>BaseLayer<span class="o">()</span>.<span class="o">()]</span>
+cocos2d-x debug info <span class="o">[</span>BaseLayer<span class="o">()</span>.init<span class="o">()]</span>
+// BaseLayer init 方法我们创建了两个对象
+cocos2d-x debug info <span class="o">[</span>LSLayer<span class="o">()</span>.<span class="o">()]</span>
+cocos2d-x debug info <span class="o">[</span>LSLayer<span class="o">()</span>.init<span class="o">()]</span>
+cocos2d-x debug info <span class="o">[</span>LSSprite<span class="o">()</span>.<span class="o">()]</span>
+cocos2d-x debug info <span class="o">[</span>LSSprite<span class="o">()</span>.init<span class="o">()]</span>
+// 对象创建完成，紧接着这“无用”对象便已经释放了，而另一个已经使用的对象没有释放
+cocos2d-x debug info <span class="o">[</span>LSSprite<span class="o">()</span>.~<span class="o">()]</span>
+</pre></div>

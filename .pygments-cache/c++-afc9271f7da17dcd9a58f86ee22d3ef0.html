@@ -1,0 +1,65 @@
+<div class="highlight"><pre><span class="c1">// 关闭 scrollview 的触摸，相应的，我们要启用当前的触摸，并注册为单点触摸类型</span>
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">registerWithTouchDispatcher</span><span class="p">(){</span>
+    <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getTouchDispatcher</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">addTargetedDelegate</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">ccTouchBegan</span><span class="p">(</span><span class="n">cocos2d</span><span class="o">::</span><span class="n">CCTouch</span> <span class="o">*</span><span class="n">pTouch</span><span class="p">,</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">){</span>
+	<span class="c1">// 记录触摸起始点的位置</span>
+    <span class="n">m_touchPoint</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">convertToGL</span><span class="p">(</span><span class="n">pTouch</span><span class="o">-&gt;</span><span class="n">getLocationInView</span><span class="p">());</span>
+	<span class="c1">// 记录触摸起始点的偏移</span>
+    <span class="n">m_touchOffset</span> <span class="o">=</span> <span class="n">getScrollView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContentOffset</span><span class="p">();</span>
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">ccTouchMoved</span><span class="p">(</span><span class="n">cocos2d</span><span class="o">::</span><span class="n">CCTouch</span> <span class="o">*</span><span class="n">pTouch</span><span class="p">,</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">){</span>
+    <span class="n">CCPoint</span> <span class="n">movePoint</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">convertToGL</span><span class="p">(</span><span class="n">pTouch</span><span class="o">-&gt;</span><span class="n">getLocationInView</span><span class="p">());</span>
+	<span class="c1">// 获得当前的拖动距离</span>
+    <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">movePoint</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">m_touchPoint</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    
+    <span class="c1">// 设定当前偏移位置</span>
+    <span class="n">CCPoint</span> <span class="n">adjustPoint</span> <span class="o">=</span> <span class="n">ccp</span><span class="p">(</span><span class="n">m_touchOffset</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">distance</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="c1">// 让 scrollView 跟着 move 操作而移动</span>
+    <span class="n">getScrollView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setContentOffset</span><span class="p">(</span><span class="n">adjustPoint</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">ccTouchEnded</span><span class="p">(</span><span class="n">cocos2d</span><span class="o">::</span><span class="n">CCTouch</span> <span class="o">*</span><span class="n">pTouch</span><span class="p">,</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">){</span>
+    <span class="n">CCPoint</span> <span class="n">endPoint</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">convertToGL</span><span class="p">(</span><span class="n">pTouch</span><span class="o">-&gt;</span><span class="n">getLocationInView</span><span class="p">());</span>
+    <span class="kt">float</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">endPoint</span><span class="p">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">m_touchPoint</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+	
+    <span class="k">if</span> <span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">){</span>
+        <span class="c1">// 小于三，不做拖动操作，也排除了（抖动误操作）</span>
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">fabs</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">){</span>
+        <span class="c1">// 大于 50，执行拖动效果</span>
+        <span class="n">adjustScrollView</span><span class="p">(</span><span class="n">distance</span><span class="p">);</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="c1">// 回退为拖动之前的位置</span>
+        <span class="n">adjustScrollView</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">ccTouchCancelled</span><span class="p">(</span><span class="n">cocos2d</span><span class="o">::</span><span class="n">CCTouch</span> <span class="o">*</span><span class="n">pTouch</span><span class="p">,</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">CCEvent</span> <span class="o">*</span><span class="n">pEvent</span><span class="p">){</span>
+	<span class="c1">// 参数为 0 表示 恢复之前的屏幕位置</span>
+    <span class="n">adjustScrollView</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LevelView</span><span class="o">::</span><span class="n">adjustScrollView</span><span class="p">(</span><span class="kt">float</span> <span class="n">offset</span><span class="p">){</span>
+    <span class="n">CCSize</span> <span class="n">winSize</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getWinSize</span><span class="p">();</span>
+    <span class="c1">// 我们根据 offset 的实际情况来判断移动效果</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>		<span class="c1">// 表示右移</span>
+        <span class="n">m_nCurPage</span> <span class="o">++</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">offset</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">m_nCurPage</span> <span class="o">--</span><span class="p">;</span>
+
+	<span class="c1">// 屏幕 页数 检测</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">m_nCurPage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">m_nCurPage</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_nCurPage</span> <span class="o">&gt;</span> <span class="n">m_nPageCount</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">m_nCurPage</span> <span class="o">=</span> <span class="n">m_nPageCount</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+
+	<span class="c1">// 根据当前的 页数 获得偏移量，并设定新的位置，且启用动画效果</span>
+    <span class="n">CCPoint</span> <span class="n">adjustPoint</span> <span class="o">=</span> <span class="n">ccp</span><span class="p">(</span><span class="o">-</span><span class="n">winSize</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">m_nCurPage</span> <span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">getScrollView</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">setContentOffsetInDuration</span><span class="p">(</span><span class="n">adjustPoint</span><span class="p">,</span> <span class="mf">0.2f</span><span class="p">);</span>
+    
+    <span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;current page index: %d&quot;</span><span class="p">,</span> <span class="n">m_nCurPage</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>

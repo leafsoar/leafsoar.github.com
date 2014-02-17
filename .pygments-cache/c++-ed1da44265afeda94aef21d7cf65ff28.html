@@ -1,0 +1,33 @@
+<div class="highlight"><pre><span class="kt">bool</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">CCLOG</span><span class="p">(</span><span class="s">&quot;cocos2d: %s&quot;</span><span class="p">,</span> <span class="n">cocos2dVersion</span><span class="p">());</span>
+
+	<span class="p">...</span>
+	<span class="p">...</span>
+	<span class="n">m_dOldAnimationInterval</span> <span class="o">=</span> <span class="n">m_dAnimationInterval</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">kDefaultFPS</span><span class="p">;</span>    
+    <span class="n">m_pobScenesStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCArray</span><span class="p">();</span>
+    <span class="n">m_pobScenesStack</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+
+	<span class="p">...</span>
+	<span class="p">...</span>
+    <span class="n">m_fContentScaleFactor</span> <span class="o">=</span> <span class="mf">1.0f</span><span class="p">;</span>
+
+	<span class="p">...</span>
+	<span class="p">...</span>
+    <span class="c1">// touchDispatcher</span>
+    <span class="n">m_pTouchDispatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCTouchDispatcher</span><span class="p">();</span>
+    <span class="n">m_pTouchDispatcher</span><span class="o">-&gt;</span><span class="n">init</span><span class="p">();</span>
+
+    <span class="c1">// KeypadDispatcher</span>
+    <span class="n">m_pKeypadDispatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCKeypadDispatcher</span><span class="p">();</span>
+
+    <span class="c1">// Accelerometer</span>
+    <span class="n">m_pAccelerometer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CCAccelerometer</span><span class="p">();</span>
+
+
+    <span class="c1">// 这里手动调用了 push 方法，而在这之前的初始化过程中，间接的使用了 CCObject 的 autorelease，已经触发过一次 push 方法</span>
+    <span class="n">CCPoolManager</span><span class="o">::</span><span class="n">sharedPoolManager</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">push</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

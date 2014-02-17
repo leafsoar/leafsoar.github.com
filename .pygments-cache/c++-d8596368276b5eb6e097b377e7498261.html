@@ -1,0 +1,31 @@
+<div class="highlight"><pre><span class="n">CCSize</span> <span class="n">size</span> <span class="o">=</span> <span class="n">CCDirector</span><span class="o">::</span><span class="n">sharedDirector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getWinSize</span><span class="p">();</span>
+
+<span class="n">CCPoint</span> <span class="n">center</span> <span class="o">=</span> <span class="n">ccp</span><span class="p">(</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">// 大小 600x500 为了 NoBorder 看到效果，使用稍大的背景图</span>
+<span class="n">CCSprite</span><span class="o">*</span> <span class="n">pb</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Back.jpg&quot;</span><span class="p">);</span>
+<span class="n">pb</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">center</span><span class="p">);</span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">pb</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// 480x320 此图为使用于设计分辨率 LsSize 的图片</span>
+<span class="n">CCSprite</span><span class="o">*</span> <span class="n">pSprite</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;HelloWorld.png&quot;</span><span class="p">);</span>
+<span class="n">pSprite</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">center</span><span class="p">);</span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">pSprite</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// 37x37 在 480x320 画面的四个拐角处，添加参照</span>
+<span class="n">CCSprite</span><span class="o">*</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Peas.png&quot;</span><span class="p">);</span>
+<span class="n">p1</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccpAdd</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">ccp</span><span class="p">(</span><span class="o">-</span><span class="mi">240</span><span class="p">,</span> <span class="o">-</span><span class="mi">160</span><span class="p">)));</span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+
+<span class="n">CCSprite</span><span class="o">*</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Peas.png&quot;</span><span class="p">);</span>
+<span class="n">p2</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccpAdd</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">ccp</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">160</span><span class="p">)));</span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
+
+<span class="n">CCSprite</span><span class="o">*</span> <span class="n">p3</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Peas.png&quot;</span><span class="p">);</span>
+<span class="n">p3</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccpAdd</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">ccp</span><span class="p">(</span><span class="o">-</span><span class="mi">240</span><span class="p">,</span> <span class="mi">160</span><span class="p">)));</span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
+
+<span class="n">CCSprite</span><span class="o">*</span> <span class="n">p4</span> <span class="o">=</span> <span class="n">CCSprite</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;Peas.png&quot;</span><span class="p">);</span>
+<span class="n">p4</span><span class="o">-&gt;</span><span class="n">setPosition</span><span class="p">(</span><span class="n">ccpAdd</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">ccp</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="o">-</span><span class="mi">160</span><span class="p">)));</span>
+<span class="k">this</span><span class="o">-&gt;</span><span class="n">addChild</span><span class="p">(</span><span class="n">p4</span><span class="p">);</span>
+</pre></div>

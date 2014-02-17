@@ -1,0 +1,36 @@
+<div class="highlight"><pre><span class="c1">// [Cocos2d-x]/scripting/javascript/bindings/js_bindings_opengl.h</span>
+<span class="cp">#include &quot;cocos2d.h&quot;</span>
+<span class="cp">#include &quot;ScriptingCore.h&quot;</span>
+<span class="cp">#include &quot;cocos2d_specifics.hpp&quot;</span>
+
+<span class="k">class</span> <span class="nc">GLNode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">Node</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">draw</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">js_register_cocos2dx_GLNode</span><span class="p">(</span><span class="n">JSContext</span> <span class="o">*</span><span class="n">cx</span><span class="p">,</span> <span class="n">JSObject</span> <span class="o">*</span><span class="n">global</span><span class="p">);</span>
+
+<span class="c1">// [Cocos2d-x]/scripting/lua/cocos2dx_support/LuaOpengl.h</span>
+<span class="cp">#ifndef __LUA_OPENGL_H__</span>
+<span class="cp">#define __LUA_OPENGL_H__</span>
+
+<span class="cp">#ifdef __cplusplus</span>
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="p">{</span>
+<span class="cp">#endif</span>
+<span class="cp">#include &quot;tolua++.h&quot;</span>
+<span class="cp">#ifdef __cplusplus</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#include &quot;base_nodes/CCNode.h&quot;</span>
+<span class="k">class</span> <span class="nc">GLNode</span><span class="o">:</span><span class="k">public</span> <span class="n">cocos2d</span><span class="o">::</span><span class="n">Node</span>
+<span class="p">{</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">draw</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="n">TOLUA_API</span> <span class="kt">int</span> <span class="n">tolua_Cocos2d_CCDrawNode_drawPolygon00</span><span class="p">(</span><span class="n">lua_State</span><span class="o">*</span> <span class="n">tolua_S</span><span class="p">);</span>
+
+<span class="n">TOLUA_API</span> <span class="kt">int</span> <span class="n">tolua_opengl_open</span><span class="p">(</span><span class="n">lua_State</span><span class="o">*</span> <span class="n">tolua_S</span><span class="p">);</span>
+
+<span class="cp">#endif </span><span class="c1">//__LUA_OPENGL_H__</span>
+</pre></div>

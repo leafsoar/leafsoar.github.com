@@ -1,0 +1,235 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">LsTouchEvent</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 定义可触摸元素，用于统一管理</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">LsTouch</span><span class="o">:</span> <span class="k">public</span> <span class="n">CCNode</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">LsTouch</span><span class="p">();</span>
+	<span class="o">~</span><span class="n">LsTouch</span><span class="p">();</span>
+	<span class="n">CREATE_FUNC</span><span class="p">(</span><span class="n">LsTouch</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">init</span><span class="p">()</span>	<span class="p">;</span>
+
+	<span class="c1">// 设置显示项</span>
+	<span class="kt">void</span> <span class="n">setDisplay</span><span class="p">(</span><span class="n">CCSprite</span><span class="o">*</span> <span class="n">dis</span><span class="p">);</span>
+
+	<span class="kt">void</span> <span class="n">setEventId</span><span class="p">(</span><span class="kt">int</span> <span class="n">eventId</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">getEventId</span><span class="p">();</span>
+
+	<span class="c1">/// 常规判断</span>
+	<span class="kt">bool</span> <span class="n">selfCheck</span><span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span> <span class="n">ccTouch</span><span class="p">,</span> <span class="n">LsTouchEvent</span><span class="o">*</span> <span class="n">lsTe</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// 判断当前的元素是否被点击</span>
+	<span class="kt">bool</span> <span class="n">containsCCTouchPoint</span><span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span> <span class="n">ccTouch</span><span class="p">);</span>
+	<span class="kt">bool</span> <span class="n">isParentAllVisible</span><span class="p">(</span><span class="n">LsTouchEvent</span><span class="o">*</span> <span class="n">lsTe</span><span class="p">);</span>
+
+	<span class="c1">// 用户保存显示精灵的 tag</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">TAG_DISPLAY</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">m_iEventId</span><span class="p">;</span>
+
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">LsTouchEvent</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">LsTouchEvent</span><span class="p">();</span>
+	<span class="o">~</span><span class="n">LsTouchEvent</span><span class="p">();</span>
+
+	<span class="kt">void</span> <span class="n">addLsTouch</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">,</span> <span class="kt">int</span> <span class="n">eventId</span><span class="p">);</span>
+
+	<span class="kt">void</span> <span class="n">removeLsTouch</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">);</span>
+
+	<span class="kt">bool</span> <span class="n">sendTouchMessage</span><span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span> <span class="n">ccTouch</span><span class="p">);</span>
+
+	<span class="c1">// 返回优先级较高的可触摸对象</span>
+	<span class="n">LsTouch</span><span class="o">*</span> <span class="n">getPriorityTouch</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">LsTouch</span><span class="o">*</span> <span class="n">b</span><span class="p">);</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">touchEventAction</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">CCArray</span><span class="o">*</span> <span class="n">m_pLsTouches</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">/// 类实现	</span>
+<span class="cp">#include &quot;LsTouch.h&quot;</span>
+
+<span class="n">LsTouch</span><span class="o">::</span><span class="n">LsTouch</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LsTouch()&quot;</span><span class="p">);</span>
+	<span class="n">m_iEventId</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">LsTouch</span><span class="o">::~</span><span class="n">LsTouch</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LsTouch().~()&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">init</span><span class="p">()</span> <span class="p">{</span>
+
+	<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">setDisplay</span><span class="p">(</span><span class="n">CCSprite</span><span class="o">*</span> <span class="n">dis</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 设置之前先清除，没有也无所谓</span>
+	<span class="n">removeChildByTag</span><span class="p">(</span><span class="n">TAG_DISPLAY</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+	<span class="n">addChild</span><span class="p">(</span><span class="n">dis</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">TAG_DISPLAY</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">setEventId</span><span class="p">(</span><span class="kt">int</span> <span class="n">eventId</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">m_iEventId</span> <span class="o">=</span> <span class="n">eventId</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">getEventId</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">m_iEventId</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">selfCheck</span><span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span> <span class="n">ccTouch</span><span class="p">,</span> <span class="n">LsTouchEvent</span><span class="o">*</span> <span class="n">lsTe</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bRef</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+	<span class="c1">// 可点击项的检测，可扩展</span>
+	<span class="k">do</span> <span class="p">{</span>
+		<span class="c1">// 是否通过点击位置检测</span>
+		<span class="n">CC_BREAK_IF</span><span class="p">(</span><span class="o">!</span><span class="n">containsCCTouchPoint</span><span class="p">(</span><span class="n">ccTouch</span><span class="p">));</span>
+		<span class="c1">// 是否正在运行，排除可能存在已经从界面移除，但是并没有释放的可能</span>
+		<span class="n">CC_BREAK_IF</span><span class="p">(</span><span class="o">!</span><span class="n">isRunning</span><span class="p">());</span>
+
+		<span class="c1">// 判断是否隐藏</span>
+		<span class="n">CC_BREAK_IF</span><span class="p">(</span><span class="o">!</span><span class="n">isVisible</span><span class="p">());</span>
+		<span class="c1">// 这里可能还需要判断内部显示项目是否隐藏</span>
+		<span class="c1">///// 暂留</span>
+		<span class="c1">// 不仅判断当前元素是否隐藏，还需要判断在它之上的元素直到事件处理层，是否存在隐藏</span>
+		<span class="n">CC_BREAK_IF</span><span class="p">(</span><span class="o">!</span><span class="n">isParentAllVisible</span><span class="p">(</span><span class="n">lsTe</span><span class="p">));</span>
+
+		<span class="n">bRef</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">bRef</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">containsCCTouchPoint</span><span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span> <span class="n">ccTouch</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 获得显示内容</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">dis</span> <span class="o">=</span> <span class="n">getChildByTag</span><span class="p">(</span><span class="n">TAG_DISPLAY</span><span class="p">);</span>
+	<span class="n">CCSprite</span><span class="o">*</span> <span class="n">sprite</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">CCSprite</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">dis</span><span class="p">);</span>
+	<span class="n">CCPoint</span> <span class="n">point</span> <span class="o">=</span> <span class="n">sprite</span><span class="o">-&gt;</span><span class="n">convertTouchToNodeSpaceAR</span><span class="p">(</span><span class="n">ccTouch</span><span class="p">);</span>
+	<span class="n">CCSize</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sprite</span><span class="o">-&gt;</span><span class="n">getTexture</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getContentSize</span><span class="p">();</span>
+	<span class="n">CCRect</span> <span class="n">rect</span> <span class="o">=</span> <span class="n">CCRectMake</span><span class="p">(</span><span class="o">-</span><span class="n">s</span><span class="p">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">s</span><span class="p">.</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">rect</span><span class="p">.</span><span class="n">containsPoint</span><span class="p">(</span><span class="n">point</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LsTouch</span><span class="o">::</span><span class="n">isParentAllVisible</span><span class="p">(</span><span class="n">LsTouchEvent</span><span class="o">*</span> <span class="n">lsTe</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bRef</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="c1">// 向父类转型，以便获取地址比较对象，LsTouchEvent 的对象必须同时直接或者简介继承 CCNode</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">nLsTe</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">CCNode</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">lsTe</span><span class="p">);</span>
+
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">getParent</span><span class="p">();</span>
+	<span class="k">do</span> <span class="p">{</span>
+		<span class="c1">// 如果遍历完毕，说明 LsTouch 不再 LsTouchEvent 之内</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">parent</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">bRef</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="c1">// 如果 LsTouch 在 LsTouchEvent 之内，返回 true</span>
+		<span class="c1">// 注意：如果想让LsTouchEvent 处理 不在其 CCNode 结构之内的元素，则取消此处判断</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">nLsTe</span> <span class="o">==</span> <span class="n">parent</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">isVisible</span><span class="p">())</span> <span class="p">{</span>
+			<span class="n">bRef</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">-&gt;</span><span class="n">getParent</span><span class="p">();</span>
+	<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">bRef</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">LsTouchEvent</span><span class="o">::</span><span class="n">LsTouchEvent</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LsTouchEvent()&quot;</span><span class="p">);</span>
+	<span class="n">m_pLsTouches</span> <span class="o">=</span> <span class="n">CCArray</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+	<span class="n">m_pLsTouches</span><span class="o">-&gt;</span><span class="n">retain</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">LsTouchEvent</span><span class="o">::~</span><span class="n">LsTouchEvent</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">CCLog</span><span class="p">(</span><span class="s">&quot;LsTouchEvent().~()&quot;</span><span class="p">);</span>
+	<span class="n">m_pLsTouches</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LsTouchEvent</span><span class="o">::</span><span class="n">addLsTouch</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">,</span> <span class="kt">int</span> <span class="n">eventId</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">touch</span><span class="o">-&gt;</span><span class="n">setEventId</span><span class="p">(</span><span class="n">eventId</span><span class="p">);</span>
+	<span class="n">m_pLsTouches</span><span class="o">-&gt;</span><span class="n">addObject</span><span class="p">(</span><span class="n">touch</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">LsTouchEvent</span><span class="o">::</span><span class="n">removeLsTouch</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">touch</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">m_pLsTouches</span><span class="o">-&gt;</span><span class="n">removeObject</span><span class="p">(</span><span class="n">touch</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">LsTouchEvent</span><span class="o">::</span><span class="n">sendTouchMessage</span><span class="p">(</span><span class="n">CCTouch</span><span class="o">*</span> <span class="n">ccTouch</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 编写判断，集合中的哪个元素级别高，就触发哪一个</span>
+	<span class="n">LsTouch</span><span class="o">*</span> <span class="n">lsTouch</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+	<span class="c1">// 获得点击的点</span>
+	<span class="n">CCObject</span><span class="o">*</span> <span class="n">pObj</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">LsTouch</span><span class="o">*</span> <span class="n">lt</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">CCARRAY_FOREACH</span><span class="p">(</span><span class="n">m_pLsTouches</span><span class="p">,</span> <span class="n">pObj</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">lt</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">LsTouch</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">pObj</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">lt</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">lt</span><span class="o">-&gt;</span><span class="n">selfCheck</span><span class="p">(</span><span class="n">ccTouch</span><span class="p">,</span> <span class="k">this</span><span class="p">))</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">lsTouch</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+					<span class="n">lsTouch</span> <span class="o">=</span> <span class="n">lt</span><span class="p">;</span>
+				<span class="k">else</span>
+					<span class="c1">// 如果已存在符合条件元素，比较优先级</span>
+					<span class="n">lsTouch</span> <span class="o">=</span> <span class="n">getPriorityTouch</span><span class="p">(</span><span class="n">lsTouch</span><span class="p">,</span> <span class="n">lt</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="c1">// 比对最终只有一个元素触发</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">lsTouch</span><span class="p">){</span>
+		<span class="n">touchEventAction</span><span class="p">(</span><span class="n">lsTouch</span><span class="p">);</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">LsTouch</span><span class="o">*</span> <span class="n">LsTouchEvent</span><span class="o">::</span><span class="n">getPriorityTouch</span><span class="p">(</span><span class="n">LsTouch</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">LsTouch</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// 触摸优先级通过 CCNode 树判断，也既是显示层次级别等因素</span>
+	<span class="c1">// 以当前元素为“根”向父类转型，以便获取地址比较对象，LsTouchEvent 的对象必须同时直接或者简介继承 CCNode</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">nLsTe</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">CCNode</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+	<span class="c1">// 共同的分枝</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">allParent</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="c1">// 寻找 a 与 b 共同的分枝</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">nAParent</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">nBParent</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">nAChild</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">CCNode</span><span class="o">*</span> <span class="n">nBChild</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="k">do</span> <span class="p">{</span>
+		<span class="n">nAChild</span> <span class="o">=</span> <span class="n">nAParent</span><span class="p">;</span>
+		<span class="n">nAParent</span> <span class="o">=</span> <span class="n">nAParent</span><span class="o">-&gt;</span><span class="n">getParent</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nAParent</span><span class="p">)</span>
+			<span class="k">break</span><span class="p">;</span>
+
+		<span class="n">nBParent</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
+		<span class="k">do</span> <span class="p">{</span>
+			<span class="n">nBChild</span> <span class="o">=</span> <span class="n">nBParent</span><span class="p">;</span>
+			<span class="n">nBParent</span> <span class="o">=</span> <span class="n">nBParent</span><span class="o">-&gt;</span><span class="n">getParent</span><span class="p">();</span>
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nBParent</span><span class="p">)</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">nAParent</span> <span class="o">==</span> <span class="n">nBParent</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">allParent</span> <span class="o">=</span> <span class="n">nAParent</span><span class="p">;</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="p">}</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">nBParent</span> <span class="o">==</span> <span class="n">nLsTe</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">allParent</span><span class="p">)</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">nAParent</span> <span class="o">==</span> <span class="n">nLsTe</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+	<span class="c1">// 此处只需要判断 nAChild 和 nBChild 的优先级即可，默认返回 a</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">nAChild</span> <span class="o">||</span> <span class="o">!</span><span class="n">nBChild</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+	<span class="c1">// 根据 ZOrder 判断，如果 ZOrder一样，根据索引位置判断</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">nAChild</span><span class="o">-&gt;</span><span class="n">getZOrder</span><span class="p">()</span> <span class="o">==</span> <span class="n">nBChild</span><span class="o">-&gt;</span><span class="n">getZOrder</span><span class="p">())</span>
+		<span class="k">return</span> <span class="n">allParent</span><span class="o">-&gt;</span><span class="n">getChildren</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">indexOfObject</span><span class="p">(</span><span class="n">nAChild</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">allParent</span><span class="o">-&gt;</span><span class="n">getChildren</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">indexOfObject</span><span class="p">(</span><span class="n">nBChild</span><span class="p">)</span><span class="o">?</span> <span class="nl">a:</span> <span class="n">b</span><span class="p">;</span>
+	<span class="k">else</span>
+		<span class="k">return</span> <span class="n">nAChild</span><span class="o">-&gt;</span><span class="n">getZOrder</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">nBChild</span><span class="o">-&gt;</span><span class="n">getZOrder</span><span class="p">()</span><span class="o">?</span> <span class="nl">a:</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>

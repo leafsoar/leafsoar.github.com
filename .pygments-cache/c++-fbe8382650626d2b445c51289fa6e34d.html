@@ -1,0 +1,18 @@
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">AssetLoader</span><span class="o">:</span> <span class="k">public</span> <span class="n">Object</span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">static</span> <span class="n">Sprite</span><span class="o">*</span> <span class="n">createSprite</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">static</span> <span class="n">AssetLoader</span><span class="o">*</span> <span class="n">getInstance</span><span class="p">();</span>
+    <span class="kt">bool</span> <span class="n">init</span><span class="p">();</span>
+
+    <span class="kt">bool</span> <span class="n">fileExists</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTexturePlist</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">getTextureImage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">Dictionary</span><span class="o">*</span> <span class="n">_fileDict</span><span class="p">;</span>              <span class="c1">// 文件列表</span>
+    <span class="n">Dictionary</span><span class="o">*</span> <span class="n">_texturePlistDict</span><span class="p">;</span>           <span class="c1">// 打包资源到文件的映射</span>
+    <span class="n">Dictionary</span><span class="o">*</span> <span class="n">_textureImageDict</span><span class="p">;</span>       <span class="c1">// 打包资源plist 到图片的映射</span>
+<span class="p">};</span>
+</pre></div>
