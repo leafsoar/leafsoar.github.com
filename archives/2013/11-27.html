@@ -9,7 +9,7 @@
   <meta name="author" content="一叶">
 
   
-  <meta name="description" content="[叶落归根]： <a href='http://blog.leafsoar.com/archives/2013/11-27.html' rel='bookmark' title='如何优雅的管理游戏资源'>http://blog.leafsoar.com/archives/2013/11-27. &hellip;">
+  <meta name="description" content="[无间落叶]： <a href='http://blog.leafsoar.com/archives/2013/11-27.html' rel='bookmark' title='如何优雅的管理游戏资源'>http://blog.leafsoar.com/archives/2013/11-27. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -45,13 +45,14 @@
 
 
 </head>
+<a href="https://github.com/leafsoar" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/images/github.png" alt="Fork me on GitHub"></a>
 
 <body   >
   <header role="banner"><hgroup>
   <h1>
       <a href="/">/无间落叶</a>
       
-        <span>无有入无间 ～</span>
+        <span>I’m a leaf on the wind ~</span>
       
   </h1>
 </hgroup>
@@ -103,9 +104,7 @@
   
 
 
-<time datetime="2013-11-27T20:43:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
-        
-         | <a href="#disqus_thread">Comments</a>
+<time datetime="2013-11-27T20:56:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
         
         
       </p>
@@ -115,7 +114,7 @@
 
 <div class="entry-content">
   <p>
-	<a href='http://blog.leafsoar.com' rel='bookmark' title='【无间落叶:无有入无间 ~】'>[叶落归根]</a>：
+	<a href='http://blog.leafsoar.com' rel='bookmark' title='【无间落叶:无有入无间 ~】'>[无间落叶]</a>：
 	<a href='http://blog.leafsoar.com/archives/2013/11-27.html' rel='bookmark'
            title='如何优雅的管理游戏资源'>http://blog.leafsoar.com/archives/2013/11-27.html</a>    
   </p>  
@@ -123,18 +122,18 @@
 
 <p>本文使用 Cocos2d-3.0alpha1 版本，创建了一个 C++ 项目，介绍在 C++ 中，如何处理资源相关的内容，如果读者使用脚本，也可以参考本文中资源管理理念而忽略语言特性，你可以在 Github<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup> 上面看到本文所有源码。</p>
 
-<!-- More -->
+<!-- more -->
 
 
 <h2>名字系统</h2>
 
 <p>也许你可称之为“命名规范”，但显然它无法表达我所想说的内容，很多人在创建精灵的时候喜欢直接使用资源名称，而没有任何定义，这是一个不好的习惯，如果游戏资源不存在，缺少，或者修改名字，如此你需要在多出引用的地方一一修改。游戏开发中的变数总是无法预料，合理的“名字系统”可以节省很多人力。</p>
 
-<p>我们设定一个文件，这里名为 &ldquo;Resources.h&rdquo; 的文件，在其中定义所有的资源名称，在游戏开发中，<strong>尽量只</strong> 使用此处的名称，如图片名称，字体名称，声音资源等。这样做有以下好处，只是简单说几点：</p>
+<p>我们设定一个文件，这里名为 “Resources.h” 的文件，在其中定义所有的资源名称，在游戏开发中，<strong>尽量只</strong> 使用此处的名称，如图片名称，字体名称，声音资源等。这样做有以下好处，只是简单说几点：</p>
 
 <ul>
 <li>如果对资源做出修改，我们可以修改此处定义，以保证同步，避免缺失，命名错误，错误引用等问题</li>
-<li>在图片名定义修改时，编译器会编译出错，并自动帮助我们 &ldquo;找&rdquo; 出引用的地方，方便修改</li>
+<li>在图片名定义修改时，编译器会编译出错，并自动帮助我们 “找” 出引用的地方，方便修改</li>
 <li>由于有常量定义的缘故，我们的 IDE 会自动补全所有以定义变量名称，减少出错的可能，提高效率</li>
 <li>这个文件列表显然可以写一个如 python 脚本自动生成</li>
 </ul>
@@ -142,7 +141,7 @@
 
 <p>使用脚本来自动生成文件常量定义显然是个行之有效的途径，这种机械式的操作交给脚本就行了，它总能出色的完成任务，首先来看看项目的 Resources 目录内容：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -155,13 +154,13 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[Resources]~ ./tree    
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>Resources<span class="o">]</span>~ ./tree
 </span><span class='line'>├── CloseNormal.png
 </span><span class='line'>├── CloseSelected.png
 </span><span class='line'>├── HelloWorld.png
 </span><span class='line'>├── file_list.json
 </span><span class='line'>├── fonts
-</span><span class='line'>│   └── Marker\ Felt.ttf
+</span><span class='line'>│   └── Marker<span class="se">\ </span>Felt.ttf
 </span><span class='line'>└── images
 </span><span class='line'>    ├── JungleLeft.png
 </span><span class='line'>    ├── ghosts.plist
@@ -171,7 +170,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>以上是资源文件，那么通过脚本所生成的 &ldquo;Resources.h&rdquo; 文件又是什么样子的呢，脚本在 Github 仓库中可以找到(<strong>注意：资源名中最好不要有空格，以免留下“隐患”</strong>)：</p>
+<p>以上是资源文件，那么通过脚本所生成的 “Resources.h” 文件又是什么样子的呢，脚本在 Github 仓库中可以找到(<strong>注意：资源名中最好不要有空格，以免留下“隐患”</strong>)：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -222,9 +221,9 @@
 
 <p>看到通过脚本，我们生成了所有文件的常量定义，这让得我们可以在游戏中任意使用，但是请注意，这里生成的文件名称是没有包含路径的，所以在定义文件之前，也自动生成了目录列表 <strong>searchPaths</strong>，顾名思义，设定了一个目录列表，以便找寻资源，我们可以在程序的开始处使用 <code>FileUtils::getInstance()-&gt;setSearchPaths(searchPaths);</code> 来设定游戏的资源目录列表，这样我们就可以不用关心资源所在的目录了，你甚至可以根据需要合理的调整资源目录。</p>
 
-<p><strong>注意：</strong>通过设置 searchPaths 可以让我们不用关系资源的路径所在，那么意味着资源名称必须唯一，否则可能会出现引用问题。其次，是如果使用了多套资源方案，请注意 searchPaths 的先后顺序关系。本文暂不考虑多套资源。关于忽略资源目录的做法，如果有不同看法者，欢迎留言讨论，对我来说，忽略路径是利大于弊的 ~</p>
+<p><strong>注意</strong>：通过设置 searchPaths 可以让我们不用关系资源的路径所在，那么意味着资源名称必须唯一，否则可能会出现引用问题。其次，是如果使用了多套资源方案，请注意 searchPaths 的先后顺序关系。本文暂不考虑多套资源。关于忽略资源目录的做法，如果有不同看法者，欢迎留言讨论，对我来说，忽略路径是利大于弊的 ~</p>
 
-<p>以上通过脚本自动生成了文件列表，但是这显然不够，我们看到资源当中有两张 <strong>打包</strong> 资源图片（可以使用 TexturePacker 对图片资源进行打包，具有占用更小空间，优化运行效率等诸多好处，后面还会介绍此点） plist 文件。我们当然也是需要使用打包中资源的，所以脚本需要能够自动解析 plist 文件，并提取出 TexturePacker 打包的资源名称，请看如下定义，同样是自动生成在 &ldquo;Resources.h&rdquo; 文件之中：</p>
+<p>以上通过脚本自动生成了文件列表，但是这显然不够，我们看到资源当中有两张 <strong>打包</strong> 资源图片（可以使用 TexturePacker 对图片资源进行打包，具有占用更小空间，优化运行效率等诸多好处，后面还会介绍此点） plist 文件。我们当然也是需要使用打包中资源的，所以脚本需要能够自动解析 plist 文件，并提取出 TexturePacker 打包的资源名称，请看如下定义，同样是自动生成在 “Resources.h” 文件之中：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -270,20 +269,20 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>上面我们使用两种方式创建精灵，为什么会有两种方式？也许你可以看看 <a href="http://zilongshanren.com/">『子龙山人』</a> 翻译的文章 <a href="http://www.cnblogs.com/zilongshanren/archive/2011/03/18/1988097.html">『在cocos2d里面如何使用Texture Packer和像素格式来优化spritesheet』
-</a> 其中详细的介绍了图片资源打包优化的相关细节问题，一个游戏最多的就是图片资源，优化空间最大的也是图片资源，里面详细的介绍了优化图片资源占用空间 50％ 以上，如何使游戏运行内存占用优化近 50％，以 cocos2d 为例，但 cocos2d-x 同样能够适用，而且能通过脚本自动打包。 所以合理的对图片资源进行打包优化是非常有必要的。但如何处理这个流程确实不好定夺，<strong>因为不同资源的使用方式不同，因为这两种方式的存在，导致我们编写代码的逻辑不同，这需要提前预定好，</strong>所以我们考虑如下开发流程：</p>
+<p>上面我们使用两种方式创建精灵，为什么会有两种方式？也许你可以看看 <a href="http://blog.zilongshanren.com/">『子龙山人』</a> 翻译的文章 <a href="http://www.cnblogs.com/zilongshanren/archive/2011/03/18/1988097.html">『在cocos2d里面如何使用Texture Packer和像素格式来优化spritesheet』</a>
+其中详细的介绍了图片资源打包优化的相关细节问题，一个游戏最多的就是图片资源，优化空间最大的也是图片资源，里面详细的介绍了优化图片资源占用空间 50％ 以上，如何使游戏运行内存占用优化近 50％，以 cocos2d 为例，但 cocos2d-x 同样能够适用，而且能通过脚本自动打包。 所以合理的对图片资源进行打包优化是非常有必要的。但如何处理这个流程确实不好定夺，<strong>因为不同资源的使用方式不同，因为这两种方式的存在，导致我们编写代码的逻辑不同，这需要提前预定好，</strong>所以我们考虑如下开发流程：</p>
 
 <p>在游戏开发前，对所有资源打包后提供给 编写游戏人员，也就是说在写程序之前，游戏资源就已确定，那些以打包，哪些未打包都已经知道，如前面一样，通过两种方式创建精灵。但是这样的结果是，前期规定好了的，后期就无法改动，或者说很难改动，牵一发而动全身啊 ~ 这就需要加大 <strong>前期的规划</strong> 力度，以确保后期不会出现太大太多事与愿违的情形。这种情况下的 <strong>后期优化</strong> 将会非常蹩脚。况且加大前期规划的力度，可能会对整个项目的进程有所影响，如比编写人员的动工会稍缓，人力资源分配不合理。</p>
 
 <h3>透明</h3>
 
-<p>前文提到，我们使用了 searchPaths 变量，以用忽略资源的路径，一个存在的东西，看起来好像不存在一样，我们称之为 &ldquo;透明&#8221;，&#8221;透明&rdquo; 在软件领域中也是重要的概念，它也强调着封装的重要性，隐藏细节的必要性。这里的资源路径就是如此，我们可以说 <strong>对于资源的使用来说，它的路径是透明的</strong>，有没有路径，路径为何？那不重要，重要的是你能通过资源名称获取想要的资源。</p>
+<p>前文提到，我们使用了 searchPaths 变量，以用忽略资源的路径，一个存在的东西，看起来好像不存在一样，我们称之为 “透明”，”透明” 在软件领域中也是重要的概念，它也强调着封装的重要性，隐藏细节的必要性。这里的资源路径就是如此，我们可以说 <strong>对于资源的使用来说，它的路径是透明的，</strong> 有没有路径，路径为何？那不重要，重要的是你能通过资源名称获取想要的资源。</p>
 
-<p>也许你已经发现了，我想说的不是路径问题，而是图片资源问题。<strong>对于图片资源的使用来说，它&#8217;是否是打包资源&#8217; 应该是透明的</strong>。也既是在使用图片资源的时候，你不应该关心它是不是打包后的资源，是也好，不是也罢，这不应该影响你对资源的请求和使用。&#8221;打包&#8221; 这个过程对你来说，<strong>不存</strong> ~</p>
+<p>也许你已经发现了，我想说的不是路径问题，而是图片资源问题。<strong>对于图片资源的使用来说，它’是否是打包资源’ 应该是透明的。</strong>也既是在使用图片资源的时候，你不应该关心它是不是打包后的资源，是也好，不是也罢，这不应该影响你对资源的请求和使用。”打包” 这个过程对你来说，<strong>不存 ~</strong></p>
 
-<h2>图片资源类型的 &ldquo;透明化&rdquo; 处理</h2>
+<h2>图片资源类型的 “透明化” 处理</h2>
 
-<p>先来段代码，看看没有 &ldquo;透明化&rdquo; 处理时的一般使用方式：</p>
+<p>先来段代码，看看没有 “透明化” 处理时的一般使用方式：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -300,7 +299,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>以上我们看到，同样是创建精灵， <code>si_JungleLeft</code> 是普通的 <strong>文件资源</strong>，而 <code>si_grossinis_sister1</code> 是 <strong>打包资源</strong>，这决定着两者的使用方式不同，那么怎么 &ldquo;透明化&rdquo; 处理呢：</p>
+<p>以上我们看到，同样是创建精灵， <code>si_JungleLeft</code> 是普通的 <strong>文件资源</strong>，而 <code>si_grossinis_sister1</code> 是 <strong>打包资源</strong>，这决定着两者的使用方式不同，那么怎么 “透明化” 处理呢：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -313,11 +312,11 @@
 
 <p>我们提供了一个类 <code>AssetLoader</code>，它有一个方法 <code>createSprite(const std::string&amp; name)</code>。不论我们是不是打包资源，我们都通过这个方法来创建精灵，显然它的内部工作原理是根据图片的实际类型，动态判断并创建，之后返回，要实现这样一个功能是可行的，并且没有多复杂，实现以后。我们在使用图片资源的使用就再也用关心它是什么类型的资源了。</p>
 
-<p><strong>这也意味着你可以以一个理想的方式来管理开发流程。</strong> 图片资源可以和游戏编写同时进行，不停的添加图片资源，不停的编写游戏逻辑，而不用考虑图片是否已经优化的问题了，此时可以提供一些零散的图片，以供使用（图片命名最好还是固定），当然也可以提前把关联性比较强的图片提前打包处理，这并不影响使用，因为对程序来说，<strong>它</strong> 是透明的，&#8221;不存在&#8221;的。在后期，我们可以集中的在后期对游戏资源优化，打包处理等（关于此点，文章后面也会给出相对合理的处理流程）。</p>
+<p><strong>这也意味着你可以以一个理想的方式来管理开发流程</strong>。 图片资源可以和游戏编写同时进行，不停的添加图片资源，不停的编写游戏逻辑，而不用考虑图片是否已经优化的问题了，此时可以提供一些零散的图片，以供使用（图片命名最好还是固定），当然也可以提前把关联性比较强的图片提前打包处理，这并不影响使用，因为对程序来说，<strong>它是透明的</strong>，”不存在”的。在后期，我们可以集中的在后期对游戏资源优化，打包处理等（关于此点，文章后面也会给出相对合理的处理流程）。</p>
 
 <h3>功能的实现方案与流程</h3>
 
-<p>在开始之前，一叶通常会将其流程在心中演算一遍，使其不会出现太大的纰漏，对于不合理的所在，可以重新拟定方案。然后实现之 ~ 要使得 AssetLoader 的 createSprite 方法完成其功能，那么它需要知道，当前请求的 <strong>图片资源</strong> 是否是 <strong>文件资源</strong>（以 <strong>文件资源</strong> 和 <strong>打包资源</strong> 区分两者），如果是，直接由前文 <strong>方式一</strong> 创建精灵返回，如果不是，则从 打包资源 里面找寻，找到就通过 <strong>方式二</strong> 创建精灵并返回，如果还没找到，就返回空指针喽 ~ 由此我们知道 AssetLoader 它内部需要完成以下功能：</p>
+<p>在开始之前，一叶通常会将其流程在心中演算一遍，使其不会出现太大的纰漏，对于不合理的所在，可以重新拟定方案。然后实现之 ~ 要使得 <strong>AssetLoader</strong> 的 <strong>createSprite</strong> 方法完成其功能，那么它需要知道，当前请求的 <strong>图片资源</strong> 是否是 <strong>文件资源</strong>（以 <strong>文件资源</strong> 和 <strong>打包资源</strong> 区分两者），如果是，直接由前文 <strong>方式一</strong> 创建精灵返回，如果不是，则从 打包资源 里面找寻，找到就通过 <strong>方式二</strong> 创建精灵并返回，如果还没找到，就返回空指针喽 ~ 由此我们知道 AssetLoader 它内部需要完成以下功能：</p>
 
 <ul>
 <li>能够判断一个资源是否是文件资源</li>
@@ -364,9 +363,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>如以上的定义实现，它有三个字典， <code>_fileDict</code> 的 key 保存着所有文件资源，value 保存文件资源的 <strong>编号</strong> ，这样我们就能够随时判断一个图片是否是文件资源了。<code>_texturePlistDict</code> 的 key 保存着打包资源的名称，value 保存打包资源所在 Plist 文件的编号，通过它我们能通过打包资源获取到它 Plist 所在的文件。 <code>_textureImageDict</code> 也是类似，key 保存打包资源名称，value 保存打包资源所在的真实 图片文件的引用。</p>
+<p>如以上的定义实现，它有三个字典， <code>_fileDict</code> 的 <strong>key</strong> 保存着所有文件资源，<strong>value</strong> 保存文件资源的 编号 ，这样我们就能够随时判断一个图片是否是文件资源了。<code>_texturePlistDict</code> 的 key 保存着打包资源的名称，value 保存打包资源所在 Plist 文件的编号，通过它我们能通过打包资源获取到它 Plist 所在的文件。 <code>_textureImageDict</code> 也是类似，key 保存打包资源名称，value 保存打包资源所在的真实 图片文件的引用。</p>
 
-<p>功能已经定义完毕，现在的问题是我们如何去为这几个字典填充数据？显然程序初始化手动填充不靠谱，前文的文件名等信息都已经是自动定义了，此处我们当然也希望有一个方案 <strong>自动填充</strong> 了。这里的做法是，在使用 python 生成资源定义的时候，同时生成一个 json 文件，这个文件里面包含了所有此处字典中所需要的数据，然后 AssetLoader 初始化的时候读取这个 json 文件，以完成自动填充数据的功能。先来看看自动生成的 json 文件长什么样纸：</p>
+<p>功能已经定义完毕，现在的问题是我们如何去为这几个字典填充数据？显然程序初始化手动填充不靠谱，前文的文件名等信息都已经是自动定义了，此处我们当然也希望有一个方案 <strong>自动填充</strong> 了。这里的做法是，在使用 <strong>python</strong> 生成资源定义的时候，同时生成一个 json 文件，这个文件里面包含了所有此处字典中所需要的数据，然后 <strong>AssetLoader</strong> 初始化的时候读取这个 json 文件，以完成自动填充数据的功能。先来看看自动生成的 json 文件长什么样纸：</p>
 
 <p>题外话：使用 json 来存储这样一个中转的数据格式是最后定下来的方案，设计之初考虑过几种方案，比如想到可以用一个 sqlite 数据来保存各种数据，这样数据的操作就非常统一，对后期的数据统计分析也会非常方便，曾与朋友 子龙山人 讨论过这之间的详细细节，以及各种实现方案的利弊分析。使用 sqlite 的好处是更为灵活，后期扩展功能会非常方便，适合稍微大点的项目，但是如果一个项目本身没有使用 sqlite 数据库，如果为这里的方案而硬添加一个扩展库实现 sqlite，可能就会非常的不友好，不通用。</p>
 
@@ -437,9 +436,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>以上是自动生成的 json 数据文件内容，为了在这里展示，做了点格式化和缩进，更为友好一点。通过 <strong>file_name</strong> 和 <strong>file_index</strong> 可以创建文件资源列表字典，通过 <strong>texture_name</strong> 和 <strong>texture_plist</strong> 可以创建打包资源和文件资源之间的映射， <strong>texture_image</strong> 也是同样。 file_name 包含了所有文件资源，file_index 为文件资源做了编号，这两个数据项的个数是相同的。 texture_name 定义了所有打包资源的定义，texture_plist 和 texture_image 则保存了 打包资源所在的 plist 文件和图片文件的引用，它们的数据项个数也是相同的。只要保证这里生成的内容没有错误，那么我们就正确的将其填充到 AssetLoader 的字典里面，以实现想要的功能。</p>
+<p>以上是自动生成的 json 数据文件内容，为了在这里展示，做了点格式化和缩进，更为友好一点。通过 <strong>file_name</strong> 和 <strong>file_index</strong> 可以创建文件资源列表字典，通过 texture_name 和 texture_plist 可以创建打包资源和文件资源之间的映射， texture_image 也是同样。 file_name 包含了所有文件资源，file_index 为文件资源做了编号，这两个数据项的个数是相同的。 texture_name 定义了所有打包资源的定义，texture_plist 和 texture_image 则保存了 打包资源所在的 plist 文件和图片文件的引用，它们的数据项个数也是相同的。只要保证这里生成的内容没有错误，那么我们就正确的将其填充到 AssetLoader 的字典里面，以实现想要的功能。</p>
 
-<p>为什么数据会长这个样子？一叶本来的设计 json 文件，多层嵌套更具描述性（各种对象，各种属性，一目了然），但是发现 解析的时候稍显麻烦，在 新版 cocos2d-x 的 gui 库中，已经封装好了一些常用的 json 解析功能，本着 <strong>拿来注意</strong>（尽可能的寻找可用的资源来简化自身的流程） 的思想，为使解析过程简单，所以数据格式就定义成那个样子了  － ＝。现在只是用了五个数组（更平面化的数据组织，像是数据库表），保存所有数据。只能说，这样做是为了迎合代码的编写，让本来复杂的 json 解析过程变得更为简单。现在看来，但到也简单清晰，看看填充字典的关键代码实现（如果有其它更好的方式，修改也不麻烦，修改生成的数据格式，再修改代码中数据的填充方法就行了）：</p>
+<p>为什么数据会长这个样子？一叶本来的设计 json 文件，多层嵌套更具描述性（各种对象，各种属性，一目了然），但是发现 解析的时候稍显麻烦，在 新版 cocos2d-x 的 gui 库中，已经封装好了一些常用的 json 解析功能，本着 拿来注意（尽可能的寻找可用的资源来简化自身的流程） 的思想，为使解析过程简单，所以数据格式就定义成那个样子了 － ＝。现在只是用了五个数组（更平面化的数据组织，像是数据库表），保存所有数据。只能说，这样做是为了迎合代码的编写，让本来复杂的 json 解析过程变得更为简单。现在看来，但到也简单清晰，看看填充字典的关键代码实现（如果有其它更好的方式，修改也不麻烦，修改生成的数据格式，再修改代码中数据的填充方法就行了）：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -508,7 +507,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>这里能看到一些陌生的内容 <code>JsonDictionary</code>、<code>DictionaryHelper</code>类型和其操作方式，这里的使用方法不是本文的重点，有兴趣的朋友看看源码实现。以很简洁的方式，填充了我们需要的字典数据内容。有了这些字典数据，我们就很容易的判断一个图片是否是文件资源了，如果是打包资源，也能够很容易找出打包资源所在的 Plist 文件和 图片文件，最后看一下 <code>createSprite</code> 方法的实现：</p>
+<p>这里能看到一些陌生的内容 <code>JsonDictionary</code>、<code>DictionaryHelper</code> 类型和其操作方式，这里的使用方法不是本文的重点，有兴趣的朋友看看源码实现。以很简洁的方式，填充了我们需要的字典数据内容。有了这些字典数据，我们就很容易的判断一个图片是否是文件资源了，如果是打包资源，也能够很容易找出打包资源所在的 Plist 文件和 图片文件，最后看一下 <code>createSprite</code> 方法的实现：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -541,7 +540,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>至此我们便完成了 <strong>图片资源类型的 “透明化” 处理</strong> 。这样一个解决方案，很好的解决了在开发过程中图片资源的管理过程，后期优化，都不冲突。能够通过此提供一个较为合理的开发流程。 本文所使用的源码，脚本等都可以在 Github 上面找到 『<a href="https://github.com/leafsoar/resource-manager">https://github.com/leafsoar/resource-manager</a>』，但是要清楚，我这里提供的只是按照我这种流程下来的一种实现而已，对于程序本身而言，也还有很多可以改进的所在 ~ 思路同样，每个人实现的具体细节可能不一样，不论你使用 C++ 还是脚本语言，都不影响你 &ldquo;透明化&rdquo; 图片资源类型。</p>
+<p>至此我们便完成了 <strong>图片资源类型的 “透明化” 处理</strong> 。这样一个解决方案，很好的解决了在开发过程中图片资源的管理过程，后期优化，都不冲突。能够通过此提供一个较为合理的开发流程。 本文所使用的源码，脚本等都可以在 Github 上面找到 <a href="https://github.com/leafsoar/resource-manager">『https://github.com/leafsoar/resource-manager』</a>，但是要清楚，我这里提供的只是按照我这种流程下来的一种实现而已，对于程序本身而言，也还有很多可以改进的所在 ~ 思路同样，每个人实现的具体细节可能不一样，不论你使用 C++ 还是脚本语言，都不影响你 “透明化” 图片资源类型。</p>
 
 <h2>如何优雅的管理游戏资源</h2>
 
@@ -549,7 +548,7 @@
 
 <p>继续前文内容，我们可以使用 AssetLoader 来加载图片资源，创建精灵，实现游戏玩法逻辑等。但是我们通常会在一个场景进入时就预先缓存所有图片资源（声音资源亦是同样），甚至在游戏开始时，预先加载所有的图片资源，以 <strong>保证游戏画面的流畅性</strong>。如果没有预先缓存图片资源，那么在游戏中用到的时候，实时加载可能 <strong>会使游戏画面卡顿</strong>，这不是我们想看到的结果。如果一个游戏不大，资源总和也没多少，那么可以直接在游戏开始时全部加载完毕，这种情况处理起来比较简单，直接把所有资源加载就可以了。但是如今的游戏动辄几十兆，几百兆，显然游戏资源一次性加载是不科学的，这时我们可以分场景，在加载一个场景的时候，清空前一个场景所使用的图片缓存资源，然后预先加载当前场景的游戏资源，以达到最优的内存占用。</p>
 
-<p>通常我们都是人为的，定义了一个方法在开始场景前做一些准备工作，清空缓存，预加载游戏资源，如这里有一个需要预加载的资源列表，而前文我们提到，在游戏开发的过程中，我们的图片资源可能会有所改动，这就需要我们去 <strong>人为的同步去手动维护这个列表</strong>，而这样的工作费时费力，还容易出现很多错误，如果我们能够把这一步的操作自动化，根据实际情况生成其列表，并且 <strong>列表资源的加载顺序也是做过优化的</strong>(根据文件大小，或者分辨率大小，优先加载大的资源，使游戏减少因占用内存过多而崩溃的可能性)，那将使我们能有 <strong>更多的精力花在更值得的地方</strong>。如果结合到本文之前的实现方案就是，在开始一个场景时，我们对 AssetLoader 做一个标记，在这个标记之后所请求的图片资源都是当前场景的资源，我们可以在内部将其记录下来，以任何方式都行，这样我们就能够非常容易的收集并生成当前场景所使用的图片资源了。如果我们将这个列表做成动态可维护的，自动记录以便下次运行时预先加载，这样一种实现从逻辑上来说时可行。如何优雅得管理游戏资源？但是实现比 <strong>优雅</strong> 更重要，在实现的过程中，尽量使开发变得简单，流程变得清晰，也是一叶努力的方向 ～</p>
+<p>通常我们都是人为的，定义了一个方法在开始场景前做一些准备工作，清空缓存，预加载游戏资源，如这里有一个需要预加载的资源列表，而前文我们提到，在游戏开发的过程中，我们的图片资源可能会有所改动，这就需要我们去 <strong>人为的同步去手动维护这个列表</strong>，而这样的工作费时费力，还容易出现很多错误，如果我们能够把这一步的操作自动化，根据实际情况生成其列表，并且 <strong>列表资源的加载顺序也是做过优化的</strong>(根据文件大小，或者分辨率大小，优先加载大的资源，使游戏减少因占用内存过多而崩溃的可能性)，那将使我们能有 更多的精力花在更值得的地方。如果结合到本文之前的实现方案就是，在开始一个场景时，我们对 AssetLoader 做一个标记，在这个标记之后所请求的图片资源都是当前场景的资源，我们可以在内部将其记录下来，以任何方式都行，这样我们就能够非常容易的收集并生成当前场景所使用的图片资源了。如果我们将这个列表做成动态可维护的，自动记录以便下次运行时预先加载，这样一种实现从逻辑上来说时可行。如何优雅得管理游戏资源？但是实现比 优雅 更重要，在实现的过程中，尽量使开发变得简单，流程变得清晰，也是一叶努力的方向 ～</p>
 
 <p>以上只是对预加载资源列表的动态维护，提供了一个简单的思路，其中还有很多细节值得推敲。但我想实现这样一种流程对游戏的开发是非常有帮助的，对于这个部分的内容，一叶还没有给出一个具体的实现方案，但将继续之前的流程往下实现，并分享在 Github 上面，同时你也可以参与进来。也算是在这里集思广益，如果你有什么好的想法，对本文实现有什么改进，都可以一起交流。如果你遇到了相同的问题，也可以说说你是怎么处理这些问题的，欢迎分享 ～</p>
 <div class="footnotes">
@@ -583,7 +582,7 @@
   
 
 
-<time datetime="2013-11-27T20:43:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
+<time datetime="2013-11-27T20:56:00+08:00" pubdate data-updated="true">Nov 27<span>th</span>, 2013</time>
       
 
 <span class="categories">
@@ -610,12 +609,6 @@
     </p>
   </footer>
 </article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-  </section>
 
 </div>
 
@@ -688,28 +681,12 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - 一叶 -
+  Copyright &copy; 2014 - 一叶 -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
 </p>
 
 </footer>
   
-
-<script type="text/javascript">
-      var disqus_shortname = 'leafsoar';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.leafsoar.com/archives/2013/11-27.html';
-        var disqus_url = 'http://blog.leafsoar.com/archives/2013/11-27.html';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
 
